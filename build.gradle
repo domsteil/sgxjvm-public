@@ -1,11 +1,13 @@
 buildscript {
     repositories {
         jcenter()
-        mavenCentral()
+        maven {
+            url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
+        }
     }
     dependencies {
-        classpath "com.r3.sgx:sgx-jvm-plugin:$oblivium_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.r3.sgx:sgx-jvm-plugin:$oblivium_version"
     }
 }
 
@@ -15,14 +17,17 @@ apply plugin: 'com.r3.sgx'
 repositories {
     jcenter()
     mavenLocal()
+    maven {
+        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
+    }
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
-    implementation "org.bouncycastle:bcprov-jdk15on:$bouncycastle_version"
 
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
     testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
 }
 
