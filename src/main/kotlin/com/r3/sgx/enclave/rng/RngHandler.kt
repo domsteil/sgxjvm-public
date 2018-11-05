@@ -14,6 +14,10 @@ import kotlin.math.min
  * It receives requests for random numbers consisting of a single integer no larger than 1024. Then it generates a
  * random sequence of bytes of this size, signs the bytes, and sends back a reply including the random numbers, the
  * enclave's public key, and the signature itself.
+ *
+ * Note that in a more realistic scenario the request and reply should be serialized by a proper serialization library,
+ * like protobuf. However for the sake of reducing dependencies to the minimum we're serializing by hand using java
+ * [ByteBuffer]s.
  */
 class RngHandler(
         private val keyPair: KeyPair,
@@ -27,7 +31,7 @@ class RngHandler(
         api.getRandomBytes(randomBytes, 0, randomBytesSize)
         val signature = signatureScheme.sign(keyPair.private, randomBytes)
         val publicKey = keyPair.public.encoded
-        // We could use something like protobuf, but for the sake of reducing build dependencies we do custom serialization
+        // We could use something like protobuf,
         val size = 4 + randomBytesSize + 4 + publicKey.size + 4 + signature.size
         connected.sendTopLevel(size) {
             it.putInt(randomBytesSize)
