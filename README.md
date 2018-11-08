@@ -60,3 +60,7 @@ sgxTest {
     type = "Debug" // or "Release"
 }
 ```
+
+Note that in this case you may also want to extend the test to do a
+roundtrip to IAS to verify the correctness of the quote. This will
+require a whitelisted TLS client key, as explained here: https://software.intel.com/en-us/articles/certificate-requirements-for-intel-attestation-services.

@@ -1,10 +1,7 @@
 package com.r3.sgx.enclave.rng
 
 import com.r3.sgx.core.common.*
-import com.r3.sgx.core.host.EnclaveHandle
-import com.r3.sgx.core.host.EpidAttestationHostConfiguration
-import com.r3.sgx.core.host.EpidAttestationHostHandler
-import com.r3.sgx.core.host.NativeHostApi
+import com.r3.sgx.core.host.*
 import com.r3.sgx.core.host.internal.Native
 import com.r3.sgx.testing.BytesRecordingHandler
 import org.junit.After
@@ -18,13 +15,13 @@ import kotlin.test.assertEquals
 
 class RngEnclaveTest {
     // The SGX gradle plugin sets this property to the path of the built+signed enclave.
-    private val enclavePath = System.getProperty("com.r3.sgx.enclave.path")
+    private val enclaveFile = File(System.getProperty("com.r3.sgx.enclave.path"))
 
     private lateinit var enclave: EnclaveHandle<RootHandler.Connected>
 
     @Before
     fun setup() {
-        enclave = NativeHostApi.createEnclave(RootHandler(), File(enclavePath))
+        enclave = NativeHostApi.createEnclave(RootHandler(), enclaveFile)
     }
 
     @After
@@ -39,21 +36,38 @@ class RngEnclaveTest {
 
         // Configure the host side of attestation. Insert your SPID/quote type if you want to test using a
         // non-Simulation enclave.
-        val configuration = EpidAttestationHostConfiguration(
+        val attestationConfiguration = EpidAttestationHostConfiguration(
                 quoteType = SgxQuoteType32.LINKABLE,
                 spid = Cursor.allocate(SgxSpid)
         )
 
-        // Construct the host side of an Enclavelet, with channel and EPID attestation support
-        val connected = enclave.connected
-        val channels = connected.addDownstream(ChannelInitiatingHandler())
-        val attesting = connected.addDownstream(EpidAttestationHostHandler(configuration))
+        // Construct the host side of an Enclavelet, with channel and EPID attestation support. This mirrors
+        // RngEnclave's handler tree.
+        val root: RootHandler.Connected = enclave.connected
+        val channels: ChannelInitiatingHandler.Connected = root.addDownstream(ChannelInitiatingHandler())
+        val attestation: EpidAttestationHostHandler.Connected = root.addDownstream(EpidAttestationHostHandler(attestationConfiguration))
 
-        // Create a quote, including the enclave's report data created by RngEnclave.createReportData, and signed by the
+        // Create a quote, including the enclave's report data created by RngEnclave.createReportData and signed by the
         // Quoting Enclave. Note that this test does *not* do a full attestation roundtrip to the Intel Attestation
         // Service!
-        val quote = attesting.getQuote()
-        val hashedEnclaveKey = quote[quote.type.quote][SgxQuote.reportBody][SgxReportBody.reportData].read()
+        // This is because by default we're using a Simulation enclave that doesn't produce proper quotes. To get a
+        // proper quote we need to use a Debug or a Release enclave. Furthermore we need a whitelisted TLS key to talk
+        // to the IAS and verify such a quote.
+        // Without doing the above roundtrip the enclave is not to be trusted! This test is for demonstration purposes
+        // only.
+        val quote: Cursor<ByteBuffer, SgxSignedQuote> = attestation.getQuote()
+        val reportBody: Cursor<ByteBuffer, SgxReportBody> = quote[quote.type.quote][SgxQuote.reportBody]
+
+        // Get a view on the report data created by RngEnclave.createReportData
+        val hashedEnclaveKey = reportBody[SgxReportBody.reportData].read()
+
+        // Check that the measurement matches the enclave's that we wanted to load
+        // First read the metadata from the enclave binary
+        val metadata: Cursor<ByteBuffer, SgxMetadata> = NativeHostApi.readMetadata(enclaveFile)
+        val measurementInMetadata = metadata[SgxMetadata.enclaveCss][SgxEnclaveCss.body][SgxCssBody.enclaveHash]
+        // Now get the measurement from the quote we created
+        val measurement = reportBody[SgxReportBody.measurement]
+        assertEquals(measurementInMetadata, measurement)
 
         // Open a channel to the enclave, and send a request for a random sequence of bytes of size 256.
         val channel = channels.addDownstream(0, handler)
