@@ -6,6 +6,7 @@ import com.r3.sgx.core.common.Sender
 import com.r3.sgx.core.common.SignatureScheme
 import com.r3.sgx.core.enclave.EnclaveApi
 import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import java.security.KeyPair
 import kotlin.math.min
 
@@ -47,6 +48,7 @@ class RngHandler(
         buffer.put(publicKey)
         buffer.putInt(signature.size)
         buffer.put(signature)
+        buffer.rewind()
 
         // Finally send the reply
         connected.send(buffer)
