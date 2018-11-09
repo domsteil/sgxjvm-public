@@ -2,7 +2,6 @@ package com.r3.sgx.enclave.rng
 
 import com.r3.sgx.core.common.BytesHandler
 import com.r3.sgx.core.common.Handler
-import com.r3.sgx.core.common.Sender
 import com.r3.sgx.core.common.SignatureScheme
 import com.r3.sgx.core.enclave.EnclaveApi
 import java.nio.ByteBuffer
