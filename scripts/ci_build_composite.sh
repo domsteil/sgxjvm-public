@@ -41,4 +41,4 @@ docker run --rm \
        -e OBLIVIUM_VERSION=$OBLIVIUM_VERSION \
        $REGISTRY_URL/oblivium/oblivium-build \
        bash -c \
-       "cd $CODE_DOCKER_DIR && /opt/gradle-*/bin/gradle test -i --no-daemon --refresh-dependencies"
+       "cd $CODE_DOCKER_DIR && /opt/gradle-*/bin/gradle test -i --refresh-dependencies"
