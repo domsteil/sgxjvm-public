@@ -24,7 +24,7 @@ CODE_HOST_DIR=$PWD
 export CONTAINER_NAME=$(echo "code${CODE_HOST_DIR}" | sed -e 's/[^a-zA-Z0-9_.-]/_/g')
 CODE_DOCKER_DIR="/${CONTAINER_NAME}"
 
-# TODO replace with gradle wrapper once 5.0 is released with the keepalive fix. See https://r3-cev.atlassian.net/browse/CORDA-1509
+# TODO replace '/opt/gradle-*/bin/gradle' with the gradle wrapper once 5.0 is released with the keepalive fix. See https://r3-cev.atlassian.net/browse/CORDA-1509
 docker run --rm \
        -u $(id -u):$(id -g) \
        --network host \
