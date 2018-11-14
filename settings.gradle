@@ -1,0 +1,4 @@
+if (new File("$rootDir/oblivium").exists()) {
+    includeBuild("$rootDir/oblivium/sgx-jvm-plugin")
+    includeBuild("$rootDir/oblivium")
+}
