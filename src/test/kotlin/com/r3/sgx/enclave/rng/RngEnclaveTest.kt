@@ -17,23 +17,10 @@ class RngEnclaveTest {
     // The SGX gradle plugin sets this property to the path of the built+signed enclave.
     private val enclaveFile = File(System.getProperty("com.r3.sgx.enclave.path"))
 
-    private lateinit var enclave: EnclaveHandle<RootHandler.Connected>
+    private lateinit var enclave: EnclaveHandle<EnclaveletHostHandler.Connected>
 
     @Before
     fun setup() {
-        enclave = NativeHostApi.createEnclave(RootHandler(), enclaveFile)
-    }
-
-    @After
-    fun shutdown() {
-        Native.destroyEnclave(enclave.enclaveId)
-    }
-
-    @Test
-    fun rngEnclaveWorks() {
-        // A channel handler that records the binary blobs sent by the enclave.
-        val handler = BytesRecordingHandler()
-
         // Configure the host side of attestation. You need to specify:
         // - Whether you want to produce linkable or unlinkable quotes
         // - Your SPID
@@ -58,14 +45,18 @@ class RngEnclaveTest {
                 spid = Cursor.allocate(SgxSpid)
         )
 
-        // Construct the host side of an Enclavelet, with channel and EPID attestation support. This mirrors
-        // RngEnclave's handler tree.
-        val root: RootHandler.Connected = enclave.connected
-        val channels: ChannelInitiatingHandler.Connected =
-                root.addDownstream(ChannelInitiatingHandler())
-        val attestation: EpidAttestationHostHandler.Connected =
-                root.addDownstream(EpidAttestationHostHandler(attestationConfiguration))
+        // Create the enclave itself, setting up the host with EnclaveletHostHandler(), which mirrors RngEnclave's
+        // handler tree.
+        enclave = NativeHostApi.createEnclave(EnclaveletHostHandler(attestationConfiguration), enclaveFile)
+    }
 
+    @After
+    fun shutdown() {
+        Native.destroyEnclave(enclave.enclaveId)
+    }
+
+    @Test
+    fun rngEnclaveWorks() {
         // Create a quote, including the enclave's report data created by RngEnclave.createReportData and signed by the
         // Quoting Enclave. Note that this test by default uses a Simulation enclave so the signature is a dummy one.
         // Furthermore the test does *not* do a full attestation roundtrip to the Intel Attestation Service!
@@ -81,7 +72,7 @@ class RngEnclaveTest {
         // simply typed pointers to a region of an underlying byte blob.
         // A Cursor internally holds an offset into the blob, the size of the region, and an Encoder object describing
         // the layout of the region, which we can use to traverse the blob further down.
-        val signedQuote:        Cursor<ByteBuffer, SgxSignedQuote> = attestation.getQuote()
+        val signedQuote:        Cursor<ByteBuffer, SgxSignedQuote> = enclave.connected.attestation.getQuote()
         val quote:              Cursor<ByteBuffer, SgxQuote>       = signedQuote[signedQuote.encoder.quote]
         val reportBodyInQuote:  Cursor<ByteBuffer, SgxReportBody>  = quote[SgxQuote.reportBody]
 
@@ -97,8 +88,11 @@ class RngEnclaveTest {
         val measurementInQuote:    Cursor<ByteBuffer, SgxMeasurement> = reportBodyInQuote[SgxReportBody.measurement]
         assertEquals(measurementInMetadata, measurementInQuote)
 
-        // Open a channel to the enclave and send a request for a random sequence of bytes of size 256.
-        val channel = channels.addDownstream(0, handler)
+        // Open a channel to the enclave and send a request for a random sequence of bytes of size 256. First create a
+        // handler that records the binary blobs sent by the enclave.
+        val handler = BytesRecordingHandler()
+        // Now open the channel itself.
+        val channel = enclave.connected.channels.addDownstream(0, handler)
         val message = ByteBuffer.allocate(4)
         val requestedRandomBytesSize = 256
         message.putInt(requestedRandomBytesSize)
@@ -119,7 +113,7 @@ class RngEnclaveTest {
         // ENCLAVE: ocall_enclave_side -- internals of send, which translates to an OCALL
         // =========================== -- enclave-host boundary
         // HOST:    ocall_host_side    -- internals of receive in the host
-        // HOST:    handler.receive    -- the receive function in the handler we created at the beginning of the test
+        // HOST:    handler.receive    -- the receive function in the handler we created for the channel
         //
         // Therefore when the above send() returns we will have already received the reply, recorded in handler.ocalls.
         assertEquals(1, handler.ocalls.size)
@@ -149,6 +143,6 @@ class RngEnclaveTest {
         )
 
         // Close the channel.
-        channels.removeDownstream(0)
+        enclave.connected.channels.removeDownstream(0)
     }
 }
