@@ -1,3 +1,9 @@
+include ':enclave'
+include ':host:common'
+include ':host:frontend'
+include ':host:backend'
+
+// Optional compositing of oblivium
 if (new File("$rootDir/oblivium").exists()) {
     includeBuild("$rootDir/oblivium/sgx-jvm-plugin")
     includeBuild("$rootDir/oblivium")

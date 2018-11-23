@@ -1,45 +1,15 @@
 buildscript {
     repositories {
-        jcenter()
         maven {
             url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
         }
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.r3.sgx:sgx-jvm-plugin:$oblivium_version"
     }
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'com.r3.sgx'
-
-repositories {
-    jcenter()
-    mavenLocal()
-    maven {
-        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-    }
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
-
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
-    testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
-}
-
-shadowJar {
-    baseName = "rng-enclave"
-    zip64 = true
-
-    manifest {
-        attributes("Enclave-Class": "com.r3.sgx.enclave.rng.RngEnclave")
-    }
-}
-
-sgxTest {
-    type = "Simulation"
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
+    id 'com.github.johnrengelman.shadow' version '4.0.2' apply false
 }

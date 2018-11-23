@@ -1,0 +1,36 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.r3.sgx'
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+    maven {
+        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
+
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
+    testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
+    testRuntimeOnly "com.r3.sgx:native-host-simulation:$oblivium_version"
+}
+
+shadowJar {
+    baseName = "rng-enclave"
+    zip64 = true
+
+    manifest {
+        attributes("Enclave-Class": "com.r3.sgx.rng.enclave.RngEnclave")
+    }
+}
+
+test {
+    dependsOn signEnclaveWithDummyKeySimulation
+    systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath())
+}
