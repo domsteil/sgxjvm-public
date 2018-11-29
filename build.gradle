@@ -13,3 +13,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
     id 'com.github.johnrengelman.shadow' version '4.0.2' apply false
 }
+
+wrapper {
+    gradleVersion = "5.0"
+    distributionType = Wrapper.DistributionType.ALL
+}
