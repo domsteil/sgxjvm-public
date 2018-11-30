@@ -1,22 +1,21 @@
 package com.r3.sgx.rng.host
 
 import com.r3.sgx.core.common.BytesHandler
-import com.r3.sgx.core.common.Encoder
 import com.r3.sgx.core.host.EnclaveletHostHandler
 import com.r3.sgx.core.host.NativeHostApi
 import java.nio.ByteBuffer
 import javax.ws.rs.container.AsyncResponse
 import javax.ws.rs.core.Response
 
-class RngEnclaveHostHandler(val hostConnected: EnclaveletHostHandler.Connected, val async: AsyncResponse) : BytesHandler() {
+class RngEnclaveHostHandler(private val hostConnected: EnclaveletHostHandler.Connected, private val async: AsyncResponse) : BytesHandler() {
     override fun receive(connected: Connected, input: ByteBuffer) {
-        val randomBytesSize = input.getInt()
+        val randomBytesSize = input.int
         val randomBytes = input.readByteBuffer(randomBytesSize)
 
-        val publicKeySize = input.getInt()
+        val publicKeySize = input.int
         val publicKey = input.readByteBuffer(publicKeySize)
 
-        val signatureSize = input.getInt()
+        val signatureSize = input.int
         val signature = input.readByteBuffer(signatureSize)
 
         val signedQuote = hostConnected.attestation.getQuote()

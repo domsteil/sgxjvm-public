@@ -118,20 +118,20 @@ class RngEnclaveTest {
         // Therefore when the above send() returns we will have already received the reply, recorded in handler.ocalls.
         assertEquals(1, handler.ocalls.size)
         val responseBytes = handler.ocalls.first()
-        val randomBytesSize = responseBytes.getInt()
+        val randomBytesSize = responseBytes.int
         assertEquals(requestedRandomBytesSize, randomBytesSize)
         val randomBytes = ByteArray(randomBytesSize)
         responseBytes.get(randomBytes)
 
         // Get the enclave's public key and check it against the hash in the report.
-        val publicKeySize = responseBytes.getInt()
+        val publicKeySize = responseBytes.int
         val publicKey = ByteArray(publicKeySize)
         responseBytes.get(publicKey)
         val keyDigest = MessageDigest.getInstance("SHA-512").digest(publicKey)
         assertEquals(hashedEnclaveKey, ByteBuffer.wrap(keyDigest))
 
         // Get the enclave's signature over the random bytes and check its correctness.
-        val signatureSize = responseBytes.getInt()
+        val signatureSize = responseBytes.int
         val signature = ByteArray(signatureSize)
         responseBytes.get(signature)
         val signatureSchemeFactory = NativeHostApi.getSignatureSchemeFactory(SecureRandom.getInstance("SHA1PRNG"))

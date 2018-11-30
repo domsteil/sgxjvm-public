@@ -5,13 +5,13 @@ import com.r3.sgx.core.host.EnclaveHandle
 import com.r3.sgx.core.host.EnclaveletHostHandler
 import com.r3.sgx.core.host.EpidAttestationHostConfiguration
 import com.r3.sgx.core.host.NativeHostApi
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.ByteBuffer
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.atomic.AtomicInteger
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("/")
-class RngEnclaveHostComponent(val attestationHostConfiguration: EpidAttestationHostConfiguration) {
+class RngEnclaveHostComponent(private val attestationHostConfiguration: EpidAttestationHostConfiguration) {
 
     private val channelId = AtomicInteger(0)
     private var enclave = loadEnclave()
@@ -68,7 +68,7 @@ class RngEnclaveHostComponent(val attestationHostConfiguration: EpidAttestationH
     }
 
     private companion object {
-        val log = LoggerFactory.getLogger(RngEnclaveHostHandler::class.java)
+        val log: Logger = LoggerFactory.getLogger(RngEnclaveHostHandler::class.java)
 
         fun <A> withTemporaryUnpackOfResource(resourcePath: java.nio.file.Path, block: (File) -> A): A {
             val temporaryDirectory = File(System.getProperty("java.io.tmpdir"), "com.r3.sgx.rng.host")
@@ -77,9 +77,7 @@ class RngEnclaveHostComponent(val attestationHostConfiguration: EpidAttestationH
             try {
                 val destination = File(temporaryDirectory, resourcePath.fileName.toString())
                 val stream = RngEnclaveHostApplication::class.java.classLoader.getResourceAsStream(resourcePath.toString())
-                if (stream == null) {
-                    throw Exception("Can't find enclave at $resourcePath")
-                }
+                        ?: throw Exception("Can't find enclave at $resourcePath")
                 Files.copy(stream, destination.toPath(), StandardCopyOption.REPLACE_EXISTING)
                 return block(destination)
             } finally {
