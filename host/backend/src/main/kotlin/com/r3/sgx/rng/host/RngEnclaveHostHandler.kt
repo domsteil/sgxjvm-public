@@ -3,6 +3,7 @@ package com.r3.sgx.rng.host
 import com.r3.sgx.core.common.BytesHandler
 import com.r3.sgx.core.host.EnclaveletHostHandler
 import com.r3.sgx.core.host.NativeHostApi
+import com.r3.sgx.core.host.internal.NativeLoader
 import java.nio.ByteBuffer
 import javax.ws.rs.container.AsyncResponse
 import javax.ws.rs.core.Response
@@ -20,7 +21,7 @@ class RngEnclaveHostHandler(private val hostConnected: EnclaveletHostHandler.Con
 
         val signedQuote = hostConnected.attestation.getQuote()
 
-        val iasResponse = if (NativeHostApi.buildType == "Simulation") {
+        val iasResponse = if (NativeHostApi.buildType == NativeLoader.BinaryType.SIMULATION) {
             getMockIasResponse()
         } else {
             // TODO add proper IAS roundtrip
