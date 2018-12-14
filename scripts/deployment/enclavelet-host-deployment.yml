@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: enclavelet-host-deployment
+spec:
+  selector:
+    matchLabels:
+      app: enclavelet-host
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: enclavelet-host
+    spec:
+      imagePullSecrets:
+      - name: artifactory-docker-cred
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: enclavelet-host
+        image: oblivium-docker-release.corda.r3cev.com/oblivium/hosted-rng-enclave:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 1
+          periodSeconds: 1
+        volumeMounts:
+        - name: run-aesmd
+          mountPath: /run/aesmd
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        securityContext:
+          privileged: true
+
+      - name: aesmd
+        tty: true # Needed otherwise aesmd doesn't log anything
+        image: oblivium-docker-release.corda.r3cev.com/oblivium/aesmd:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            intel.com/sgx: 1
+        volumeMounts:
+        - name: run-aesmd
+          mountPath: /run/aesmd
+
+      volumes:
+      - name: run-aesmd
+        emptyDir: {}
+      - name: config-volume
+        configMap:
+          name: enclavelet-host-config
+          items:
+          - key: enclavelet-host-config.yml
+            path: config.yml
