@@ -1,0 +1,41 @@
+import java.nio.file.Paths
+import com.r3.sgx.plugin.SignEnclave
+
+def buildEnclaveSo = project(':oblivium-rng-enclave').tasks.getByName('signEnclaveWithDummyKeyDebug') as SignEnclave
+
+task copyEnclaveletBinary(type: Copy) {
+    dependsOn(buildEnclaveSo)
+    from buildEnclaveSo.signedEnclavePath()
+    into "$buildDir/docker/build"
+}
+
+task buildImage(type: DockerBuildImage, dependsOn: [copyDockerfile, copyEnclaveletBinary]) {
+    buildArgs["ENCLAVE_LOCATION"] = Paths.get(buildEnclaveSo.signedEnclavePath()).fileName.toString()
+    registryCredentials = publishRegistryCredentials
+    inputDir(file("$buildDir/docker/build"))
+    def imageName = "$publishRegistryUrl/oblivium/${project.name}"
+    tags = ["$imageName:latest"]
+    def dummyOutput = file("${project.buildDir}/docker/dummy-build")
+    outputs.file(dummyOutput)
+    doLast {
+        dummyOutput.write(imageId)
+    }
+}
+
+task publishImage(type: DockerPushImage, dependsOn: buildImage) {
+    registryCredentials = publishRegistryCredentials
+    imageName = "$publishRegistryUrl/oblivium/${project.name}"
+    tag = docker_image_release_tag
+    inputs.files(buildImagePublish.outputs)
+    def dummyOutput = file("${project.buildDir}/docker/dummy-push")
+    outputs.file(dummyOutput)
+    doLast {
+        dummyOutput << file("${project.buildDir}/docker/dummy-build").readBytes()
+    }
+}
+
+buildImage{
+}
+
+publishImage {
+}

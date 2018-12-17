@@ -17,7 +17,7 @@ spec:
       terminationGracePeriodSeconds: 0
       containers:
       - name: enclavelet-host
-        image: oblivium-docker-release.corda.r3cev.com/oblivium/hosted-rng-enclave:latest
+        image: oblivium-docker-release.corda.r3cev.com/oblivium/oblivium-rng-enclave-server:{TAG}
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

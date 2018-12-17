@@ -8,8 +8,6 @@ import com.bmuschko.gradle.docker.tasks.image.*
 def cleanTask = task clean {
 }
 
-def docker_image_release_tag = "latest"
-
 static def createRegistryCredentials(Closure closure) {
     def registryCredentials = new DockerRegistryCredentials()
     closure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -31,7 +29,7 @@ subprojects {
         password = System.getenv("REGISTRY_PASSWORD")
     }
     
-    def version_tag = System.getenv("DOCKER_VERSION_TAG")
+    def docker_version_tag = System.getenv("DOCKER_VERSION_TAG")
 
     task copyDockerfile(type: Copy) {
         from "$projectDir/src/docker"
@@ -42,7 +40,7 @@ subprojects {
         registryCredentials = publishRegistryCredentials
         inputDir(file("$buildDir/docker/build"))
         def imageName = "$publishRegistryUrl/oblivium/${project.name}"
-        tags = ["$version_tag"]
+        tags = ["$imageName:$docker_version_tag"]
         def dummyOutput = file("${project.buildDir}/docker/dummy-build")
         outputs.file(dummyOutput)
         doLast {
@@ -53,7 +51,7 @@ subprojects {
     task publishImage(type: DockerPushImage, dependsOn: buildImage) {
         registryCredentials = publishRegistryCredentials
         imageName = "$publishRegistryUrl/oblivium/${project.name}"
-        tag = docker_image_release_tag
+        tag = docker_version_tag
         inputs.files(buildImage.outputs)
         def dummyOutput = file("${project.buildDir}/docker/dummy-push")
         outputs.file(dummyOutput)
@@ -64,7 +62,7 @@ subprojects {
 }
 
 task publish {
-    def publishTask = project(":containers:hosted-rng-enclave").getTasks().getByName("publishImage")
+    def publishTask = project(":containers:oblivium-rng-enclave-server").getTasks().getByName("publishImage")
     dependsOn publishTask
     doLast {
         println("Published containers")
