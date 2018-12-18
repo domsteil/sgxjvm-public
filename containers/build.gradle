@@ -1,68 +1,20 @@
-plugins {
-    id 'com.bmuschko.docker-remote-api'
-}
-
-import com.bmuschko.gradle.docker.DockerRegistryCredentials
-import com.bmuschko.gradle.docker.tasks.image.*
-
-def cleanTask = task clean {
-}
-
-static def createRegistryCredentials(Closure closure) {
-    def registryCredentials = new DockerRegistryCredentials()
-    closure.resolveStrategy = Closure.DELEGATE_FIRST
-    closure.delegate = registryCredentials
-    closure()
-    return registryCredentials
-}
-
 subprojects {
     apply plugin: 'base'
-    apply plugin: 'com.bmuschko.docker-remote-api'
+    apply plugin: 'com.r3.sgx.host'
 
-    cleanTask.dependsOn(tasks.getByName("clean"))
-
-    def publishRegistryUrl = System.getenv("REGISTRY_URL")
-    def publishRegistryCredentials = createRegistryCredentials {
-        url = publishRegistryUrl
-        username = System.getenv("REGISTRY_USERNAME")
-        password = System.getenv("REGISTRY_PASSWORD")
-    }
-    
-    def docker_version_tag = System.getenv("DOCKER_VERSION_TAG")
-
-    task copyDockerfile(type: Copy) {
-        from "$projectDir/src/docker"
-        into "$buildDir/docker/build"
-    }
-
-    task buildImage(type: DockerBuildImage, dependsOn: copyDockerfile) {
-        registryCredentials = publishRegistryCredentials
-        inputDir(file("$buildDir/docker/build"))
-        def imageName = "$publishRegistryUrl/oblivium/${project.name}"
-        tags = ["$imageName:$docker_version_tag"]
-        def dummyOutput = file("${project.buildDir}/docker/dummy-build")
-        outputs.file(dummyOutput)
-        doLast {
-            dummyOutput.write(imageId)
-        }
-    }
-
-    task publishImage(type: DockerPushImage, dependsOn: buildImage) {
-        registryCredentials = publishRegistryCredentials
-        imageName = "$publishRegistryUrl/oblivium/${project.name}"
-        tag = docker_version_tag
-        inputs.files(buildImage.outputs)
-        def dummyOutput = file("${project.buildDir}/docker/dummy-push")
-        outputs.file(dummyOutput)
-        doLast {
-            dummyOutput << file("${project.buildDir}/docker/dummy-build").readBytes()
+    docker {
+        registryCredentials {
+            url = System.getenv("REGISTRY_URL")
+            username = System.getenv("REGISTRY_USERNAME")
+            password = System.getenv("REGISTRY_PASSWORD")
         }
     }
 }
 
 task publish {
-    def publishTask = project(":containers:oblivium-rng-enclave-server").getTasks().getByName("publishImage")
+    def publishTask = project(":containers:oblivium-rng-enclave-server")
+            .getTasks()
+            .getByName("pushEnclaveImageDebug")
     dependsOn publishTask
     doLast {
         println("Published containers")

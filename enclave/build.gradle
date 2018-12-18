@@ -1,6 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id 'com.r3.sgx'
+    id 'com.r3.sgx.enclave'
 }
 
 repositories {
@@ -32,5 +32,5 @@ shadowJar {
 
 test {
     dependsOn signEnclaveWithDummyKeySimulation
-    systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath())
+    systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath)
 }

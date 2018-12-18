@@ -1,16 +1,5 @@
-import java.nio.file.Paths
-import com.r3.sgx.plugin.SignEnclave
+def buildEnclaveSo = project(':enclave').tasks.getByName('signEnclaveWithDummyKeyDebug')
 
-def buildEnclaveSo = project(':enclave').tasks.getByName('signEnclaveWithDummyKeyDebug') as SignEnclave
-
-task copyEnclaveletBinary(type: Copy) {
-    dependsOn(buildEnclaveSo)
-    from buildEnclaveSo.signedEnclavePath()
-    into "$buildDir/docker/build"
-}
-
-buildImage{
-    buildArgs["ENCLAVE_LOCATION"] = Paths.get(buildEnclaveSo.signedEnclavePath()).fileName.toString()
-    buildArgs["HOST_TAG"] = "latest"
-    dependsOn copyEnclaveletBinary
+enclaveImageDebug {
+    enclaveObject = buildEnclaveSo.outputSignedEnclave
 }

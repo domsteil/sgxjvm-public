@@ -1,4 +1,4 @@
-import com.r3.sgx.plugin.SignEnclave
+import com.r3.sgx.plugin.enclave.SignEnclave
 
 plugins {
     id 'com.github.johnrengelman.shadow'
@@ -56,7 +56,7 @@ shadowJar {
         }
     }
     into '/enclave', {
-        from signEnclaveTask.signedEnclavePath()
+        from signEnclaveTask.signedEnclavePath
     }
     zip64 true
 }
