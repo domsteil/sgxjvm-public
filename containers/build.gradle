@@ -13,10 +13,10 @@ subprojects {
 
 task publish {
     def publishTask = project(":containers:oblivium-rng-enclave-server")
-            .getTasks()
+            .tasks
             .getByName("pushEnclaveImageDebug")
     dependsOn publishTask
     doLast {
-        println("Published containers")
+        logger.lifecycle("Published containers")
     }
 }
