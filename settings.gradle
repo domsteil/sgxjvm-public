@@ -2,6 +2,8 @@ include ':enclave'
 include ':host:common'
 include ':host:frontend'
 include ':host:backend'
+include ':containers'
+include ':containers:oblivium-rng-enclave-server'
 
 // Optional compositing of oblivium
 if (new File("$rootDir/oblivium").exists()) {
