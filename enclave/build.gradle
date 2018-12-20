@@ -1,6 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'com.r3.sgx.enclave'
+    id 'com.r3.sgx.host'
 }
 
 repositories {
@@ -8,6 +9,14 @@ repositories {
     mavenLocal()
     maven {
         url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
+    }
+}
+
+docker {
+    registryCredentials {
+        url = System.getenv("REGISTRY_URL")
+        username = System.getenv("REGISTRY_USERNAME")
+        password = System.getenv("REGISTRY_PASSWORD")
     }
 }
 
@@ -33,4 +42,9 @@ shadowJar {
 test {
     dependsOn signEnclaveWithDummyKeySimulation
     systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath)
+}
+
+enclaveImageDebug {
+    enclaveObject = tasks.getByName('signEnclaveWithDummyKeyDebug').outputSignedEnclave
+    publishImageName = "oblivium/oblivium-rng-enclave-server"
 }
