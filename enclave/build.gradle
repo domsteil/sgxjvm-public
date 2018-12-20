@@ -52,8 +52,7 @@ def buildEnclaveSo = tasks.getByName('signEnclaveWithDummyKeyDebug')
 
 enclaveImageDebug {
     enclaveObject = buildEnclaveSo.outputSignedEnclave
-    publishImageName = "$dockerRepoUrl/oblivium/oblivium-rng-enclave-server"
-    publishTag = "latest"
+    publishImageName = "oblivium/oblivium-rng-enclave-server"
 }
 
 pushEnclaveImageDebugAsLatest {
