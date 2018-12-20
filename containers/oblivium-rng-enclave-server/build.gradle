@@ -1,5 +1,0 @@
-def buildEnclaveSo = project(':enclave').tasks.getByName('signEnclaveWithDummyKeyDebug')
-
-enclaveImageDebug {
-    enclaveObject = buildEnclaveSo.outputSignedEnclave
-}
