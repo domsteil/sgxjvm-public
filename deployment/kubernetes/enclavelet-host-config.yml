@@ -1,7 +1,6 @@
 bindPort: 8080
 enclaveletStorage:
   type: local
-  enclaveFile: /app/test-enclave.signed.so
 attestationService:
   type: intel_as
   intelEndPoint: https://test-as.sgx.trustedservices.intel.com

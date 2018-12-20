@@ -1,4 +1,0 @@
-ARG ENCLAVE_LOCATION
-ARG HOST_TAG
-FROM oblivium-docker-release.corda.r3cev.com/oblivium/enclavelet-host-debug:$HOST_TAG
-COPY $ENCLAVE_LOCATION /app/test-enclave.signed.so
