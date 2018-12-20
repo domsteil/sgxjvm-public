@@ -12,11 +12,9 @@ repositories {
     }
 }
 
-def dockerRepoUrl = System.getenv("REGISTRY_URL")
-
 docker {
     registryCredentials {
-        url = dockerRepoUrl
+        url = System.getenv("REGISTRY_URL")
         username = System.getenv("REGISTRY_USERNAME")
         password = System.getenv("REGISTRY_PASSWORD")
     }
@@ -46,16 +44,7 @@ test {
     systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath)
 }
 
-/*** containers build and publishing ***/
-
-def buildEnclaveSo = tasks.getByName('signEnclaveWithDummyKeyDebug')
-
 enclaveImageDebug {
-    enclaveObject = buildEnclaveSo.outputSignedEnclave
+    enclaveObject = tasks.getByName('signEnclaveWithDummyKeyDebug').outputSignedEnclave
     publishImageName = "oblivium/oblivium-rng-enclave-server"
 }
-
-pushEnclaveImageDebugAsLatest {
-    dependsOn buildEnclaveSo
-}
-
