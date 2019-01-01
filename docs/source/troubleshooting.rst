@@ -15,3 +15,9 @@ malloc failure / out of memory
 
 A message like ``malloc(68184760) returned NULL. Aborting early to avoid memory corruption`` from inside the enclave
 means you ran out of memory. Try increasing the max heap size in your :ref:`enclave_xml` file.
+
+Error 8201
+----------
+
+This error during enclave launch indicates you're trying to load an unsigned enclave. Remember to use the
+``
