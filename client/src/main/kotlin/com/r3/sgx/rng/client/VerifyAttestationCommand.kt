@@ -2,7 +2,7 @@ package com.r3.sgx.rng.client
 
 import com.r3.sgx.core.common.Cursor
 import com.r3.sgx.core.common.SgxQuote
-import com.r3.sgx.enclavelethost.client.AttestationVerification
+import com.r3.sgx.enclavelethost.client.EpidAttestationVerification
 import com.r3.sgx.enclavelethost.grpc.EpidAttestation
 import com.r3.sgx.enclavelethost.grpc.GetEpidAttestationResponse
 import picocli.CommandLine
@@ -44,12 +44,12 @@ open class VerifyingCommand {
     var acceptConfigurationNeeded: Boolean = false
 
     fun verifyAttestation(attestation: EpidAttestation): Cursor<ByteBuffer, SgxQuote> {
-        val verification = AttestationVerification()
+        val verification = EpidAttestationVerification()
         val intelPkix = verification.loadIntelPkix()
         verification.acceptDebug = acceptDebug
         verification.acceptGroupOutOfDate = acceptGroupOutOfDate
         verification.acceptConfigurationNeeded = acceptConfigurationNeeded
-        return verification.verifyEpidAttestation(intelPkix, attestation)
+        return verification.verify(intelPkix, attestation)
     }
 }
 
