@@ -1,0 +1,24 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'com.github.johnrengelman.shadow'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "info.picocli:picocli:$picocli_version"
+    implementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"
+    implementation "com.r3.sgx:api-core-common:$oblivium_version"
+}
+
+shadowJar {
+    baseName = 'rng-client'
+    manifest {
+        attributes("Main-Class": "com.r3.sgx.rng.client.RngClientCli")
+    }
+    zip64 true
+}
