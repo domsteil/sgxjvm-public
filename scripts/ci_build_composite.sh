@@ -40,4 +40,4 @@ docker run --rm \
        -e OBLIVIUM_VERSION=$OBLIVIUM_VERSION \
        $REGISTRY_URL/oblivium/oblivium-build \
        bash -c \
-       "cd $CODE_DOCKER_DIR && ./gradlew test -i"
+       "cd $CODE_DOCKER_DIR && ./gradlew build -i"

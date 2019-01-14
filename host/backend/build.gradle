@@ -1,4 +1,4 @@
-import com.r3.sgx.plugin.enclave.SignEnclave
+import com.r3.sgx.plugin.enclave.BuildSignedEnclave
 
 plugins {
     id 'com.github.johnrengelman.shadow'
@@ -36,8 +36,8 @@ def frontendConfiguration = configurations.frontend
 mainClassName = "com.r3.sgx.rng.host.Main"
 
 shadowJar {
-    def signEnclaveTask = project(':enclave').getTasks().getByName('signEnclaveWithDummyKeyRelease') as SignEnclave
-    dependsOn frontendConfiguration, signEnclaveTask
+    def buildEnclaveTask = project(':enclave').getTasks().getByName('buildSignedEnclaveDebug') as BuildSignedEnclave
+    dependsOn frontendConfiguration, buildEnclaveTask
     baseName = "rng-host"
     mergeServiceFiles()
     frontendConfiguration.each { file ->
@@ -56,7 +56,7 @@ shadowJar {
         }
     }
     into '/enclave', {
-        from signEnclaveTask.signedEnclavePath
+        from buildEnclaveTask.signedEnclavePath
     }
     zip64 true
 }

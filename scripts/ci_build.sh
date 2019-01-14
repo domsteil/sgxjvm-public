@@ -7,4 +7,4 @@ SCRIPT_DIR=$(dirname $(readlink -f $0))
 ps aux | grep java | grep Gradle | awk '{ print $2; }' | xargs kill || true
 
 cd ${SCRIPT_DIR}/..
-./gradlew clean test -i --refresh-dependencies
+./gradlew clean build -i --refresh-dependencies

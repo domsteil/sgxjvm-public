@@ -19,7 +19,7 @@ Requirements
 To build the enclave
 --------------------
 ```bash
-./gradlew enclave:buildEnclaveSimulation
+./gradlew enclave:buildSignedEnclaveSimulation
 ```
 
 The above will build an enclave linked against **simulation libraries**.
@@ -30,8 +30,8 @@ SGX.
 
 To build a properly linked enclave use:
 ```
-./gradlew enclave:buildEnclaveDebug # Build enclave with debug symbols.
-./gradlew enclave:buildEnclaveRelease # Build an optimized enclave with stripped symbols.
+./gradlew enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
+./gradlew enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
 ```
 
 The above enclaves can be loaded onto an SGX device, however loading
@@ -57,10 +57,10 @@ enclave by changing the test configuration in `enclave/build.gradle`:
 
 ```
 test {
-    // dependsOn signEnclaveWithDummyKeySimulation
-    // systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath())
-    dependsOn signEnclaveWithDummyKeyRelease
-    systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeyRelease.signedEnclavePath())
+    // dependsOn buildSignedEnclaveSimulation
+    // systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveSimulation.signedEnclavePath())
+    dependsOn buildSignedEnclaveRelease
+    systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveRelease.signedEnclavePath())
 }
 ```
 

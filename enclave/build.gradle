@@ -40,11 +40,15 @@ shadowJar {
 }
 
 test {
-    dependsOn signEnclaveWithDummyKeySimulation
-    systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath)
+    dependsOn buildSignedEnclaveSimulation
+    systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveSimulation.signedEnclavePath)
 }
 
 enclaveImageDebug {
-    enclaveObject = tasks.getByName('signEnclaveWithDummyKeyDebug').outputSignedEnclave
+    enclaveObject = tasks.getByName('buildSignedEnclaveDebug').outputSignedEnclave
     publishImageName = "oblivium/oblivium-rng-enclave-server"
+}
+
+enclaveRelease {
+    shouldUseDummyKey = false
 }
