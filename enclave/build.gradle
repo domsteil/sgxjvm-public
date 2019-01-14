@@ -47,6 +47,7 @@ test {
 enclaveImageDebug {
     enclaveObject = tasks.getByName('buildSignedEnclaveDebug').outputSignedEnclave
     publishImageName = "oblivium/oblivium-rng-enclave-server"
+    publishTag = oblivium_nightly_tag
 }
 
 enclaveRelease {
