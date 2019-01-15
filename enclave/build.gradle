@@ -31,7 +31,7 @@ dependencies {
 }
 
 shadowJar {
-    baseName = "rng-enclave"
+    archiveBaseName = 'rng-enclave'
     zip64 = true
 
     manifest {
@@ -47,6 +47,16 @@ test {
 enclaveImageDebug {
     enclaveObject = tasks.getByName('buildSignedEnclaveDebug').outputSignedEnclave
     publishImageName = "oblivium/oblivium-rng-enclave-server"
+}
+
+def publishBaseContainer = gradle.includedBuilds.findResult {
+    return (it.name == 'oblivium') ? it.task(':containers:enclavelet-host-debug:pushImageTest') : null
+}
+
+buildEnclaveImageDebug {
+    if (publishBaseContainer != null) {
+        dependsOn publishBaseContainer
+    }
 }
 
 enclaveRelease {
