@@ -36,7 +36,7 @@ class PrintAttestationCommand : Callable<Unit> {
 
         println("IAS Signature:")
         val base64Signature = Base64.getEncoder().encode(attestation.iasSignature.asReadOnlyByteBuffer())
-        System.out.println(StandardCharsets.UTF_8.decode(base64Signature))
+        println(StandardCharsets.UTF_8.decode(base64Signature))
 
         println("Quote body:")
         val quote = Cursor(SgxQuote, ByteBuffer.wrap(iasResponse.isvEnclaveQuoteBody))

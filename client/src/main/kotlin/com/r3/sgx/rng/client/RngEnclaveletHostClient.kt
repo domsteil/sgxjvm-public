@@ -7,7 +7,7 @@ import io.grpc.stub.StreamObserver
 import java.nio.ByteBuffer
 import java.util.concurrent.LinkedBlockingQueue
 
-class RngEnclaveletHostClient(val stub: EnclaveletHostGrpc.EnclaveletHostStub) {
+class RngEnclaveletHostClient(private val stub: EnclaveletHostGrpc.EnclaveletHostStub) {
     companion object {
         fun <A> withClient(hostAddress: String, block: (RngEnclaveletHostClient) -> A): A {
             val channel = ManagedChannelBuilder.forTarget(hostAddress).usePlaintext().build()
@@ -30,6 +30,7 @@ class RngEnclaveletHostClient(val stub: EnclaveletHostGrpc.EnclaveletHostStub) {
         val message = ByteBuffer.allocate(4)
         message.putInt(1024)
         message.rewind()
+
         val blocking = BlockingObserver<ServerMessage>()
         val observer = stub.openSession(blocking)
         val clientMessage = ClientMessage.newBuilder()
@@ -37,16 +38,7 @@ class RngEnclaveletHostClient(val stub: EnclaveletHostGrpc.EnclaveletHostStub) {
                 .build()
         observer.onNext(clientMessage)
         val rawResponse = blocking.getNext().blob.asReadOnlyByteBuffer()
-        val bytesSize = rawResponse.getInt()
-        val bytes = ByteArray(bytesSize)
-        rawResponse.get(bytes)
-        val keySize = rawResponse.getInt()
-        val key = ByteArray(keySize)
-        rawResponse.get(key)
-        val signatureSize = rawResponse.getInt()
-        val signature = ByteArray(signatureSize)
-        rawResponse.get(signature)
-        return RngResponse(bytes, key, signature)
+        return RngResponse.fromRawResponse(rawResponse)
     }
 }
 
@@ -54,7 +46,25 @@ class RngResponse(
         val randomBytes: ByteArray,
         val publicKey: ByteArray,
         val signature: ByteArray
-)
+) {
+    companion object {
+        fun fromRawResponse(rawResponse: ByteBuffer): RngResponse {
+            val bytesSize = rawResponse.getInt()
+            val bytes = ByteArray(bytesSize)
+            rawResponse.get(bytes)
+
+            val keySize = rawResponse.getInt()
+            val key = ByteArray(keySize)
+            rawResponse.get(key)
+
+            val signatureSize = rawResponse.getInt()
+            val signature = ByteArray(signatureSize)
+            rawResponse.get(signature)
+
+            return RngResponse(bytes, key, signature)
+        }
+    }
+}
 
 class BlockingObserver<A> : StreamObserver<A> {
     private sealed class Try<A> {

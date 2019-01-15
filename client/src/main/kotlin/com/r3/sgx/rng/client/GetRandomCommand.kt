@@ -44,7 +44,7 @@ class GetRandomCommand : VerifyingCommand(), Callable<Unit> {
                     rngResponse.randomBytes
             )
             val base64RandomBytes = Base64.getEncoder().encode(rngResponse.randomBytes)
-            System.out.print(String(base64RandomBytes))
+            print(String(base64RandomBytes))
         }
     }
 }

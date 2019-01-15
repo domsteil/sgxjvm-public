@@ -20,7 +20,7 @@ class GetAttestationCommand : Callable<Unit> {
         RngEnclaveletHostClient.withClient(hostAddress) { client ->
             val quote = client.getAttestation()
             val base64Quote = Base64.getEncoder().encode(quote.toByteArray())
-            System.out.print(String(base64Quote))
+            print(String(base64Quote))
         }
     }
 }
