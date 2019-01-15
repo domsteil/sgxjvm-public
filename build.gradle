@@ -19,9 +19,3 @@ wrapper {
     gradleVersion = "5.1"
     distributionType = Wrapper.DistributionType.ALL
 }
-
-ext.oblivium_nightly_tag = buildscript.configurations.classpath
-        .collect { it.name }
-        .find { it.startsWith("sgx-jvm-plugin-host-") }
-        .substring("sgx-jvm-plugin-host-".length())
-
