@@ -44,9 +44,16 @@ test {
     systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveSimulation.signedEnclavePath)
 }
 
+def oblivium_version_resolved = configurations.runtimeClasspath
+        .resolvedConfiguration
+        .firstLevelModuleDependencies
+        .find { it.moduleName == "api-core-enclave"}
+        .moduleVersion
+
 enclaveImageDebug {
     enclaveObject = tasks.getByName('buildSignedEnclaveDebug').outputSignedEnclave
     publishImageName = "oblivium/oblivium-rng-enclave-server"
+    publishTag = oblivium_version_resolved
 }
 
 def publishBaseContainer = gradle.includedBuilds.findResult {
