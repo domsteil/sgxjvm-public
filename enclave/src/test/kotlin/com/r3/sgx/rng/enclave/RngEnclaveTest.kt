@@ -1,8 +1,12 @@
 package com.r3.sgx.rng.enclave
 
 import com.r3.sgx.core.common.*
-import com.r3.sgx.core.host.*
+import com.r3.sgx.core.host.EnclaveHandle
+import com.r3.sgx.core.host.EnclaveletHostHandler
+import com.r3.sgx.core.host.EpidAttestationHostConfiguration
+import com.r3.sgx.core.host.NativeHostApi
 import com.r3.sgx.core.host.internal.Native
+import com.r3.sgx.enclavelethost.client.Crypto
 import com.r3.sgx.testing.BytesRecordingHandler
 import org.junit.After
 import org.junit.Before
@@ -134,7 +138,7 @@ class RngEnclaveTest {
         val signatureSize = responseBytes.int
         val signature = ByteArray(signatureSize)
         responseBytes.get(signature)
-        val signatureSchemeFactory = NativeHostApi.getSignatureSchemeFactory(SecureRandom.getInstance("SHA1PRNG"))
+        val signatureSchemeFactory = Crypto.getSignatureSchemeFactory(SecureRandom.getInstance("SHA1PRNG"))
         val eddsaScheme = signatureSchemeFactory.make(SchemesSettings.EDDSA_ED25519_SHA512)
         eddsaScheme.verify(
                 publicKey = eddsaScheme.decodePublicKey(publicKey),
