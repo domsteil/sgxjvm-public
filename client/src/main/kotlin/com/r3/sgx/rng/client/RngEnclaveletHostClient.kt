@@ -38,6 +38,7 @@ class RngEnclaveletHostClient(private val stub: EnclaveletHostGrpc.EnclaveletHos
                 .build()
         observer.onNext(clientMessage)
         val rawResponse = blocking.getNext().blob.asReadOnlyByteBuffer()
+        observer.onCompleted()
         return RngResponse.fromRawResponse(rawResponse)
     }
 }

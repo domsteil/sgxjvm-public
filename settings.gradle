@@ -1,8 +1,5 @@
 include ':enclave'
 include ':client'
-include ':host:common'
-include ':host:frontend'
-include ':host:backend'
 
 // Optional compositing of oblivium
 if (file("$rootDir/oblivium").isDirectory()) {
