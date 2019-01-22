@@ -11,7 +11,11 @@ export MAVEN_URL=$4
 export MAVEN_REPOSITORY=$5
 export MAVEN_USERNAME=$6
 export MAVEN_PASSWORD=$7
+export BUILD_BRANCH=$8
 export OBLIVIUM_VERSION=$(cd "$SCRIPT_DIR/../oblivium" && git describe --long --abbrev=10)}
+export OBLIVIUM_DEPENDENCY_VERSION=$(cd "$SCRIPT_DIR/../oblivium" && git describe --abbrev=0)-+
+
+source $SCRIPT_DIR/../oblivium/scripts/ci_exclude_native.sh ${BUILD_BRANCH}
 
 # Login and pull the current build image
 docker login $REGISTRY_URL -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
@@ -38,6 +42,7 @@ docker run --rm \
        -e MAVEN_USERNAME=$MAVEN_USERNAME \
        -e MAVEN_PASSWORD=$MAVEN_PASSWORD \
        -e OBLIVIUM_VERSION=$OBLIVIUM_VERSION \
+       -e OBLIVIUM_DEPENDENCY_VERSION=$OBLIVIUM_DEPENDENCY_VERSION \
        $REGISTRY_URL/oblivium/oblivium-build \
        bash -c \
-       "cd $CODE_DOCKER_DIR && ./gradlew build -i"
+       "cd $CODE_DOCKER_DIR && ./gradlew $EXCLUDE_NATIVE build -i"
