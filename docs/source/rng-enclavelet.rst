@@ -1,7 +1,7 @@
 RNG enclavelet
 ##############
 
-`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-rng-enclave>`_.
+`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public/samples/rng>`_.
 
 Overview
 --------
@@ -50,6 +50,37 @@ reverse engineering.
    their own enclaves. Intel's own signing infrastructure will become used primarily for enclaves running on,
    e.g. consumer Windows machines.
 
+How to build the enclave
+------------------------
+
+.. sourcecode:: bash
+
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation
+
+The above will build an enclave linked against **simulation libraries** in
+``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``. This means this enclave won't be loaded as a
+proper SGX enclave, but will use simulated behaviour instead. This is useful for development/debugging or playing around
+with the tech without access to SGX.
+
+To build a properly linked enclave use:
+
+.. sourcecode:: bash
+
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
+
+The above enclaves can be loaded onto an SGX device, however loading
+these requires further setup. See :ref:`sgx-setup`.
+
+To test the build enclave:
+
+.. sourcecode:: bash
+
+    ./gradlew samples:rng:rng-enclave:test
+
+The above will build and sign a Simulation enclave with a dummy MRSIGNER key and run a test against it.
+The test loads the enclave, requests some random numbers, and checks the enclave signature.
+
 The Gradle build
 ----------------
 
@@ -59,110 +90,43 @@ provided to simplify this.
 
 Here is the basic template you should use:
 
-.. sourcecode:: groovy
+.. literalinclude:: ../../samples/rng/rng-enclave/build.gradle
+   :language: groovy
+   :start-after: DOCS_ENCLAVE_BUILD_BEGIN
+   :end-before: DOCS_ENCLAVE_BUILD_END
 
-   buildscript {
-       repositories {
-           maven {
-               url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-           }
-       }
-       dependencies {
-           classpath "com.r3.sgx:sgx-jvm-plugin-enclave:$oblivium_version"
-           classpath "com.r3.sgx:sgx-jvm-plugin-host:$oblivium_version"
-       }
-   }
-
-   plugins {
-       id 'org.jetbrains.kotlin.jvm'
-       id 'com.r3.sgx.enclave'
-       id 'com.r3.sgx.host'
-   }
-
-   repositories {
-       jcenter()
-       mavenLocal()
-       maven {
-           url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-       }
-   }
-
-   dependencies {
-       implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-       implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
-
-       testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-       testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
-       testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
-       testRuntimeOnly "com.r3.sgx:native-host-simulation:$oblivium_version"
-   }
-
-   shadowJar {
-       baseName = "rng-enclave"
-       zip64 = true
-
-       manifest {
-           attributes("Enclave-Class": "com.r3.sgx.rng.enclave.RngEnclave")
-       }
-   }
-
-   test {
-       dependsOn signEnclaveWithDummyKeySimulation
-       systemProperty("com.r3.sgx.enclave.path", signEnclaveWithDummyKeySimulation.signedEnclavePath)
-   }
-
-   enclaveImageDebug {
-       enclaveObject = tasks.getByName('signEnclaveWithDummyKeyDebug').outputSignedEnclave
-   }
-
-Put ``oblivium_version=1.0-nightly-+`` and ``kotlin_version=1.3.11`` or whatever version of Kotlin you want to use
-in your ``settings.gradle`` file. Kotlin is not required to use Oblivium, but the RNG enclave does use it.
+Set ``oblivium_version=`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
+you want to use in your ``settings.gradle`` file. Kotlin is not required to use Oblivium, but the RNG enclave does use it.
 
 Most of this is standard Gradle logic, so if it's not clear please refer to the Gradle user guide. We use the "shadow JAR"
 plugin to build a single JAR file containing all the class files and resources our program needs, including bundled
 dependencies, then we set the ``Enclave-Class`` manifest attribute. This points to the ``Enclavelet`` entrypoint that
 Oblivium will load and is analogous to the ``Main-Class`` attribute executable JARs normally use. We make the test
-tasks depend on ``signEnclaveWithDummyKeySimulation``, therefore we will run our unit tests in simulation mode. No
+tasks depend on ``buildSignedEnclaveSimulation``, therefore we will run our unit tests in simulation mode. No
 SGX hardware will be required, so this can run on normal CI clusters.
 
-**You should set the ``baseName`` property appropriately for your app**
+.. note:: You should set the ``archiveBaseName`` property appropriately for your app
 
 Then we configure the test task to set a system property indicating where the enclave can be found, during test runs.
 
-Finally, we use the ``enclaveImageDebug`` DSL to request creation of a debug mode enclave file (not simulation). This
-will be signed with a dummy key created for you during the build, which isn't whitelisted by Intel. Therefore this
-enclave is not secure.
-
-TODO: How to build a release enclave
+Finally, we use the ``enclaveRelease`` DSL to switch off dummy key signing for the Release build of the enclave. In
+order to load an enclave in non-DEBUG mode in production (which is the only secure way of loading an enclave), you must
+sign it with a key whitelisted by Intel. The plugin by default uses a dummy key for signing, which is naturally not
+whitelisted. ``shouldUseDummyKey = false`` switches this convenience behaviour off, and the plugin thus expects the
+signature to be provided externally. Specifically the MRSIGNER public key (``mrsigner.public.pem``) and the signature
+(``mrsigner.signature.bin``) must be placed into ``src/sgx/Release``.
 
 The Enclavelet class
 --------------------
 
 The RNG enclave is written in Kotlin, but the Java equivalent would be straightforward. It is defined like this:
 
-.. sourcecode:: kotlin
+.. literalinclude:: ../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngEnclave.kt
+   :language: kotlin
+   :start-after: DOCS_RNG_ENCLAVE_BEGIN
+   :end-before: DOCS_RNG_ENCLAVE_END
 
-   class RngEnclave : Enclavelet() {
-       private lateinit var signatureScheme: SignatureScheme
-       private lateinit var keyPair: KeyPair
-
-       override fun createReportData(api: EnclaveApi): Cursor<ByteBuffer, SgxReportData> {
-           // Generate a key pair
-           signatureScheme = api.signatureSchemeFactory.make(SchemesSettings.EDDSA_ED25519_SHA512)
-           keyPair = signatureScheme.generateKeyPair()
-           // Hash the public key, to be included in the report
-           val keyDigest = MessageDigest.getInstance("SHA-512").digest(keyPair.public.encoded)
-           // Construct a typed cursor over the bytes. SgxReportData is an [Encoder] which describes a JVM view over the
-           // corresponding native C++ structure.
-           return Cursor(SgxReportData, ByteBuffer.wrap(keyDigest))
-       }
-
-       override fun createHandler(api: EnclaveApi): Handler<*> {
-           return RngHandler(keyPair, signatureScheme, api)
-       }
-   }
-
-It has two tasks: create the *report data* that will be included in the remote attestation (along with the enclave
+It has two tasks: create the **report data** that will be included in the remote attestation (along with the enclave
 measurement), and creating the handler.
 
 Report data
@@ -173,8 +137,8 @@ the remote attestation protocol. This can be used to bind an encrypted channel t
 process, thus allowing a user to be sure they're communicating with the enclave and not a man-in-the-middle.
 
 In this use case, the user isn't actually uploading anything to us, just downloading. Also random numbers are by definition
-not valuable secrets until they're used for something else, like deriving an encryption key, but that being done here.
-So rather than set up an encrypted communication, we simply generate a signing key and place it in the report data.
+not valuable secrets until they're used for something else, like deriving an encryption key, but that is not being done
+here. So rather than set up an encrypted communication, we simply generate a signing key and place it in the report data.
 
 The ``EnclaveApi`` provides access to functionality provided by Oblivium. Inside the enclave many ordinary Java APIs
 do not work, because they would rely on functionality only accessible by the untrusted world, so you may have to go
@@ -199,41 +163,10 @@ clients at once.
 
 The ``RngHandler`` class looks like this:
 
-.. sourcecode:: kotlin
-
-   class RngHandler(
-           private val keyPair: KeyPair,
-           private val signatureScheme: SignatureScheme,
-           private val api: EnclaveApi
-   ): BytesHandler() {
-       override fun receive(connected: Connected, input: ByteBuffer) {
-           // Get the size requested
-           val sizeRequested = input.int
-           val randomBytesSize = min(sizeRequested, 1024)
-
-           // Generate the bytes. Under the hood the randomness is generated by the SGX-specific RDRAND instruction.
-           val randomBytes = ByteArray(randomBytesSize)
-           api.getRandomBytes(randomBytes, 0, randomBytesSize)
-
-           // Sign the bytes
-           val signature = signatureScheme.sign(keyPair.private, randomBytes)
-           val publicKey = keyPair.public.encoded
-
-           // Serialize the reply including the random bytes, public key and signature
-           val size = 4 + randomBytes.size + 4 + publicKey.size + 4 + signature.size
-           val buffer = ByteBuffer.allocate(size)
-           buffer.putInt(randomBytes.size)
-           buffer.put(randomBytes)
-           buffer.putInt(publicKey.size)
-           buffer.put(publicKey)
-           buffer.putInt(signature.size)
-           buffer.put(signature)
-           buffer.rewind()
-
-           // Finally send the reply
-           connected.send(buffer)
-       }
-   }
+.. literalinclude:: ../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngHandler.kt
+   :language: kotlin
+   :start-after: DOCS_RNG_HANDLER_BEGIN
+   :end-before: DOCS_RNG_HANDLER_END
 
 The constructor of the class takes the ``EnclaveApi``, along with the key we previously generated. We could also have
 made this an inner class rather than passing in state explicitly.
@@ -241,7 +174,7 @@ made this an inner class rather than passing in state explicitly.
 The handler derives from ``BytesHandler``, a simple convenience handler that lets you send and receive arbitrary byte
 arrays. It implements the following steps:
 
-1. Read how many random bytes the user wants, with one kilobyte being the minimum.
+1. Read how many random bytes the user wants, with one kilobyte being the maximum.
 2. Use the enclavelet API to generate the random numbers using RDRAND.
 3. Computes a signature over the buffer of random bytes.
 4. Places the signature, public key and random bytes into a byte array and finally, sends it back using the ``Connected``
@@ -267,25 +200,22 @@ eventually clean up the handler and its resources.
 enclave.xml
 ~~~~~~~~~~~
 
-At this time you are required to create a file called ``enclave.xml`` in the resources directory of your project. This
-contains various values that configure the SGX SDK enclave build process, and looks like this::
+At this time you are required to create a file called ``enclave.xml`` for each enclave build type in
+``src/sgx/Simulation``, ``src/sgx/Debug`` and ``src/sgx/Release`` in your project. This file contains various values
+that configure the SGX SDK enclave build process, and looks like this:
 
-    <EnclaveConfiguration>
-        <ProdID>0</ProdID>
-        <ISVSVN>0</ISVSVN>
-        <StackMaxSize>0x280000</StackMaxSize>
-        <HeapMaxSize>0x8000000</HeapMaxSize>
-        <TCSNum>10</TCSNum>
-        <TCSPolicy>1</TCSPolicy>
-        <DisableDebug>0</DisableDebug>
-        <MiscSelect>0</MiscSelect>
-        <MiscMask>0xFFFFFFFF</MiscMask>
-    </EnclaveConfiguration>
+.. literalinclude:: ../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
+   :language: xml
+
 
 The important values here are:
 
-* ``ISVSVN`` - this is a version number of your enclave and should be incremented whenever you release a new version.
-* ``HeapMaxSize`` - this is the maximum amount of memory available to the enclave, in hex.
-* ``DisableDebug`` - this needs to be set to 1 when building a release mode enclave.
-
-.. important:: In future versions of the platform this file will be generated for you automatically.
+* ``ProdID`` - This is a number identifying your enclave's functionality. If you create another type of enclave it
+  should be assigned a different number. This together with ``ISVSVN`` is used internally when deriving
+  certain sealing keys.
+* ``ISVSVN`` - This is a version number of your enclave and should be incremented whenever you release a new version of.
+  A sealing key derived using an older ``ISVSVN`` can be re-derived with a newer one. In this way secrets encrypted
+  with older enclaves may be decrypted with newer ones. Note that this only works if the enclave is sealing to
+  MRSIGNER, and only when the two enclaves have the same ``ProdID``.
+* ``HeapMaxSize`` - This is the maximum amount of memory available to the enclave, in hex.
+* ``DisableDebug`` - This needs to be set to 1 when building a Release mode enclave.

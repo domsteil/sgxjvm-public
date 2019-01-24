@@ -58,6 +58,10 @@ so the key is accessible only to that enclave and no other software on the syste
 or motherboard firmware. Sealing is useful for encrypting data before passing it to the untrusted world (i.e. host
 operating system and software) for storage or network transmission.
 
+**MRSIGNER.** A 3072-bit RSA key with exponent 3, which signs the enclave. The public key must be whitelisted by Intel,
+if a signed enclave is to be loaded in non-DEBUG mode. The key is also used during certain sealing key derivations, to
+enable enclaves signed with the same signer to derive the same keys.
+
 **Enclavelet.** An enclave implemented in a JVM bytecode language, running on Oblivium. Enclavelets have access to
 infrastructure that doesn't come out of the box when using raw SGX directly. They interact with the world through
 message passing.

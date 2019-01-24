@@ -2,20 +2,24 @@
 # The purpose of this file is to make the docsite in a python virtualenv
 # You can call it manually if running make manually, otherwise gradle will run it for you
 
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+export absolutevirtualenv="$SCRIPT_DIR/build/virtualenv"
+export TEXMFHOME="$SCRIPT_DIR/build/texmf"
+
 # Activate the virtualenv
-if [ -d "virtualenv/bin" ]
+if [ -d "$absolutevirtualenv/bin" ]
 then
     # it's a Unix system
-    source virtualenv/bin/activate
+    source "$absolutevirtualenv/bin/activate"
 else
-    source virtualenv/Scripts/activate
+    source "$absolutevirtualenv/Scripts/activate"
 fi
 
 echo "Generating HTML pages ..."
-make html
+make SPHINXOPTS=-W html -C ${SCRIPT_DIR}
 
-echo "Generating PDF document ..."
-make latexpdf
-
-echo "Moving PDF file from $(eval echo $PWD/build/latex/corda-developer-site.pdf) to $(eval echo $PWD/build/html/_static/corda-developer-site.pdf)"
-mv $PWD/build/latex/oblivium-guide.pdf $PWD/build/html/_static/oblivium-guide.pdf
+# TODO investigate making this work
+#echo "Generating PDF document ..."
+#make latexpdf
+#echo "Moving PDF file from $(eval echo $SCRIPT_DIR/build/latex/corda-developer-site.pdf) to $(eval echo $SCRIPT_DIR/build/html/_static/corda-developer-site.pdf)"
+#mv $SCRIPT_DIR/build/latex/oblivium-guide.pdf $PWD/build/html/_static/oblivium-guide.pdf

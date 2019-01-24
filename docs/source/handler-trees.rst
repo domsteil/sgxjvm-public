@@ -17,12 +17,12 @@ Oblivium provides handlers to perform the following tasks, and you can write you
 * Communicating the contents of Java exceptions.
 * Multiplexing "channels" onto the stream of messages. This allows multiple users to interact with an enclave simultaneously.
 * Handling remote attestation requests.
-* Serializing and deserializing to protocol buffers and Corda's AMQP object serialisation protocol.
+* Serializing and deserializing to protocol buffers.
 
-.. note:: Future versions of the framework will offer handlers for encrypting channels and management of data stored to
-   disk (sealed data).
+.. note:: Future versions of the framework will offer handlers for encrypting channels and management of persistently
+   encrypted data that may be stored to disk (sealed data).
 
-Handler trees are mirrored on each side of the communication. As an example we may have the following [Handler] structure::
+Handler trees are mirrored on each side of the communication. As an example we may have the following Handler structure::
 
       Host                                Enclave
 
@@ -67,6 +67,8 @@ This is the structure that a host of an ``Enclavelet`` must mirror with ``Channe
 Most of the above complexity is hidden behind the ``Enclavelet`` abstract class. The two functions to implement are:
 
 - ``createReportData``: the piece of data the enclave provides to be included in an attestation report/quote.
-- ``createHandler``: a factory for [Handler]s that handle incoming connections to the enclave.
+- ``createHandler``: a factory for Handlers that handle incoming connections to the enclave.
 
-.. note:: Future versions of Oblivium will probably abstract you from the concept of report data entirely.
+.. note:: Future versions of Oblivium will probably abstract you from the concept of report data entirely. A
+    cryptographic key pair will be generated automatically, this will be the identity of the running enclave instance.
+    You will be able to access this identity indirectly to derive further keys, sign data, or encrypt.

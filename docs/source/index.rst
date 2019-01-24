@@ -21,7 +21,7 @@ Features
   together, so you can focus on your application logic.
 * A set of Gradle build plugins, so compiling and signing your enclave is handled automatically.
 * A powerful unit testing framework to verify the operation of your enclave and remote attestation functionality, using just JUnit.
-* Integration with protocol buffers and Corda Serialization.
+* Integration with protocol buffers.
 * A generic host infrastructure capable of acting as the untrusted world side for any enclave.
 * API designs that guide you towards SGX best practices and avoidance of security pitfalls.
 * Many tutorials, guides and commercial support from the SGX experts at R3.
