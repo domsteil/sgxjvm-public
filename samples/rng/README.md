@@ -19,7 +19,7 @@ Requirements
 To build the enclave
 --------------------
 ```bash
-./gradlew rng:rng-enclave:buildSignedEnclaveSimulation
+./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation
 ```
 
 The above will build an enclave linked against **simulation libraries**.
@@ -30,8 +30,8 @@ SGX.
 
 To build a properly linked enclave use:
 ```
-./gradlew rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
-./gradlew rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
+./gradlew samples:rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
+./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
 ```
 
 The above enclaves can be loaded onto an SGX device, however loading
@@ -41,7 +41,7 @@ To test the enclave
 -------------------
 
 ```bash
-./gradlew rng:rng-enclave:test
+./gradlew samples:rng:rng-enclave:test
 ```
 
 The above will sign the enclave with a dummy MRSIGNER key and run a test
@@ -208,7 +208,7 @@ for details.
 
 To build an image:
 ```bash
-REGISTRY_URL=localhost:5000 ./gradlew rng:rng-enclave:buildEnclaveImageDebug
+REGISTRY_URL=localhost:5000 ./gradlew samples:rng:rng-enclave:buildEnclaveImageDebug
 ```
 
 The above will build an image targeting a local docker registry. Note
