@@ -3,46 +3,21 @@ set -xeuo pipefail
 
 # This script expects the oblivium project to be checked out in the `oblivium` subdirectory.
 
-SCRIPT_DIR=$(dirname $(readlink -f $0))
-export REGISTRY_USERNAME=$1
-export REGISTRY_PASSWORD=$2
-export REGISTRY_URL=$3
-export MAVEN_URL=$4
-export MAVEN_REPOSITORY=$5
-export MAVEN_USERNAME=$6
-export MAVEN_PASSWORD=$7
-export BUILD_BRANCH=$8
-export OBLIVIUM_VERSION=$(cd "$SCRIPT_DIR/../oblivium" && git describe --long --abbrev=10)}
+SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
+export OBLIVIUM_VERSION=$(cd "$SCRIPT_DIR/../oblivium" && git describe --long --abbrev=10)
 export OBLIVIUM_DEPENDENCY_VERSION=$(cd "$SCRIPT_DIR/../oblivium" && git describe --abbrev=0)-+
 
-source $SCRIPT_DIR/../oblivium/scripts/ci_exclude_native.sh ${BUILD_BRANCH}
+source $SCRIPT_DIR/../oblivium/scripts/ci_build_common.sh
 
 # Login and pull the current build image
-docker login $REGISTRY_URL -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD
-docker pull $REGISTRY_URL/oblivium/oblivium-build
+docker login $OBLIVIUM_CONTAINER_REGISTRY_URL -u $OBLIVIUM_CONTAINER_REGISTRY_USERNAME -p $OBLIVIUM_CONTAINER_REGISTRY_PASSWORD
+docker pull $OBLIVIUM_CONTAINER_REGISTRY_URL/oblivium/oblivium-build
 
 mkdir -p /home/$(id -un)/.gradle
 mkdir -p /home/$(id -un)/.ccache
 
-CODE_HOST_DIR=$PWD
+export CODE_HOST_DIR=$PWD
 export CONTAINER_NAME=$(echo "code${CODE_HOST_DIR}" | sed -e 's/[^a-zA-Z0-9_.-]/_/g')
-CODE_DOCKER_DIR="/${CONTAINER_NAME}"
+export CODE_DOCKER_DIR="$CODE_HOST_DIR"
 
-docker run --rm \
-       -u $(id -u):$(id -g) \
-       --network host \
-       --group-add $(cut -d: -f3 < <(getent group docker)) \
-       -v /home/$(id -un)/.gradle:/gradle \
-       -v /home/$(id -un)/.ccache:/home/.ccache \
-       -v $SCRIPT_DIR/..:$CODE_DOCKER_DIR \
-       -v /var/run/docker.sock:/var/run/docker.sock \
-       -e GRADLE_USER_HOME=/gradle \
-       -e MAVEN_URL=$MAVEN_URL \
-       -e MAVEN_REPOSITORY=$MAVEN_REPOSITORY \
-       -e MAVEN_USERNAME=$MAVEN_USERNAME \
-       -e MAVEN_PASSWORD=$MAVEN_PASSWORD \
-       -e OBLIVIUM_VERSION=$OBLIVIUM_VERSION \
-       -e OBLIVIUM_DEPENDENCY_VERSION=$OBLIVIUM_DEPENDENCY_VERSION \
-       $REGISTRY_URL/oblivium/oblivium-build \
-       bash -c \
-       "cd $CODE_DOCKER_DIR && ./gradlew $EXCLUDE_NATIVE build -i"
+runDocker oblivium/oblivium-build "cd $CODE_DOCKER_DIR && ./gradlew $EXCLUDE_NATIVE build -i"
