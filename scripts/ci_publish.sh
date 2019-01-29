@@ -6,4 +6,4 @@ export REGISTRY_URL=$1
 export REGISTRY_USERNAME=$2
 export REGISTRY_PASSWORD=$3
 
-cd "$SCRIPT_DIR/.." && ./gradlew :rng:rng-enclave:pushEnclaveImageDebug -i
+cd "$SCRIPT_DIR/.." && ./gradlew :samples:rng:rng-enclave:pushEnclaveImageDebug -i
