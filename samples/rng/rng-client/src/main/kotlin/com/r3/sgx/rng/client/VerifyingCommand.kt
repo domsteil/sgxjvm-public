@@ -3,8 +3,10 @@ package com.r3.sgx.rng.client
 import com.r3.sgx.core.common.Cursor
 import com.r3.sgx.core.common.SgxQuote
 import com.r3.sgx.enclavelethost.client.EpidAttestationVerificationBuilder
+import com.r3.sgx.enclavelethost.client.measurement.MeasurementTrust
 import com.r3.sgx.enclavelethost.grpc.EpidAttestation
 import picocli.CommandLine
+import java.io.File
 import java.nio.ByteBuffer
 
 open class VerifyingCommand {
@@ -26,8 +28,19 @@ open class VerifyingCommand {
     )
     var acceptConfigurationNeeded: Boolean = false
 
+    @CommandLine.Option(
+            names = ["-t", "--trust-file"],
+            description = ["Optional yaml file containing trusted enclave measurements. By default all measurements are accepted."]
+    )
+    var trustedMeasurementsFile: File? = null
+
+    private val trustedMeasurements get() =
+        trustedMeasurementsFile?.let {
+            MeasurementTrust.load(it).get("com.r3.sgx.rng.enclave.RngEnclave")
+        } ?: MeasurementTrust.All
+
     fun verifyAttestation(attestation: EpidAttestation): Cursor<ByteBuffer, SgxQuote> {
-        val verification = EpidAttestationVerificationBuilder()
+        val verification = EpidAttestationVerificationBuilder(trustedMeasurements)
                 .withAcceptConfigurationNeeded(acceptConfigurationNeeded)
                 .withAcceptGroupOutOfDate(acceptGroupOutOfDate)
                 .withAcceptDebug(acceptDebug)
