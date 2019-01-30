@@ -4,7 +4,7 @@ Handler trees
 Secure communication between users, enclaves and host software requires a complex and intricate set of operations to
 be performed in order to authenticate the enclave via remote attestation, set up an encrypted communications channel,
 keep multiple parallel users separated, safely store data to disk, handle errors and so on. Handler trees are how
-Oblivium abstracts you from this complexity.
+Oblivium abstracts this complexity away from you.
 
 The root of the tree processes raw calls in and out of the enclave (ECALLs/OCALLs). As the message propagates down
 the tree it gets demultiplexed/processed and possibly passed to a downstream handler. This way we can compose
@@ -51,7 +51,7 @@ When the message is sent it will first be handled by F' which will deserialize i
 downstream E', then A', etc.
 
 At the root of the tree on both sides is a ``RootHandler``. This ``Handler`` deals with exception handling and
-provides a way to add downstream handlers, the messages of which it will multiplex (mux) automatically. Exceptions
+provides a way to add downstream handlers, the messages of which it will multiplex automatically. Exceptions
 thrown are propagated back and rethrown on the calling side.
 
 By subclassing ``Enclavelet`` you get these downstream handlers added to the ``RootHandler`` automatically:

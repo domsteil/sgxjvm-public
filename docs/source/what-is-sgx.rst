@@ -53,10 +53,10 @@ report data will almost always contain a public key that can be used to set up a
 thus ensuring the untrusted world cannot tamper with any secrets that are provisioned.
 
 **Sealing.** An enclave can derive a private key useful for encryption and signing, from a CPU specific secret value.
-The derivation is deterministic so the same key can be derived over and over again, but it's tied to the enclave measurement
-so the key is accessible only to that enclave and no other software on the system, not even the operating system kernel
-or motherboard firmware. Sealing is useful for encrypting data before passing it to the untrusted world (i.e. host
-operating system and software) for storage or network transmission.
+The derivation is deterministic so the same key can be derived over and over again, but it's tied to the enclave
+measurement and the CPU identity so the key is accessible only to that enclave running on that CPU and no other software
+on the system, not even the operating system kernel or motherboard firmware. Sealing is useful for encrypting data
+before passing it to the untrusted world (i.e. host operating system and software) for storage or network transmission.
 
 **MRSIGNER.** A 3072-bit RSA key with exponent 3, which signs the enclave. The public key must be whitelisted by Intel,
 if a signed enclave is to be loaded in non-DEBUG mode. The key is also used during certain sealing key derivations, to
@@ -105,3 +105,12 @@ proof of payment.
 In an alternative approach, the enclave accepts an upload of the ML model and it's the counterparty that audits you,
 not the other way around. You then upload the video locally. If the ML model is much smaller than the video this
 approach would be make more efficient use of bandwidth.
+
+References
+----------
+
+`SGX Explained (paper) <https://eprint.iacr.org/2016/086.pdf>_`
+`Intel Attestation Service API <https://software.intel.com/sites/default/files/managed/7e/3b/ias-api-spec.pdf>`_
+`Intel SGX Developer Guide <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Guide.pdf>`_
+`Intel SGX Developer Reference <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Reference_Linux_2.4_Open_Source.pdf>`_
+`Intel x86 Instruction Reference <https://www.intel.co.uk/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-manual-325462.pdf>`_
