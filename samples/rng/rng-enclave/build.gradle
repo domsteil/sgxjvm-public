@@ -13,15 +13,23 @@ repositories {
     }
 }
 
+ext {
+    rngImageName = 'oblivium/oblivium-rng-enclave-server'
+    grpcTestPort = 44444
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation project(':samples:rng:rng-client')
+    testImplementation "org.jetbrains.kotlin:kotlin-test"
     testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
     testImplementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"
     testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
+    testImplementation "org.slf4j:slf4j-api:$slf4j_version"
     testRuntimeOnly "com.r3.sgx:native-host-simulation:$oblivium_version"
+    testRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
 }
 
 shadowJar {
@@ -34,8 +42,10 @@ shadowJar {
 }
 
 test {
-    dependsOn buildSignedEnclaveSimulation
+    dependsOn buildSignedEnclaveSimulation, startEnclaveContainerSimulation
     systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveSimulation.signedEnclavePath)
+    systemProperty("com.r3.sgx.enclave.simulated.grpc.port", grpcTestPort)
+    finalizedBy stopEnclaveContainerSimulation
 }
 
 enclaveRelease {
@@ -45,9 +55,9 @@ enclaveRelease {
 
 docker {
     registryCredentials {
-        url = System.getenv("REGISTRY_URL")
-        username = System.getenv("REGISTRY_USERNAME")
-        password = System.getenv("REGISTRY_PASSWORD")
+        url = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_URL")
+        username = System.getenv("OBLIVIUM_REGISTRY_USERNAME")
+        password = System.getenv("OBLIVIUM_REGISTRY_PASSWORD")
     }
 }
 
@@ -58,17 +68,27 @@ def oblivium_version_resolved = configurations.runtimeClasspath
         .moduleVersion
 
 enclaveImageDebug {
-    enclaveObject = tasks.getByName('buildSignedEnclaveDebug').outputSignedEnclave
-    publishImageName = "oblivium/oblivium-rng-enclave-server"
+    enclaveObject = buildSignedEnclaveDebug.outputSignedEnclave
+    publishImageName = rngImageName
     publishTag = oblivium_version_resolved
 }
 
-def publishBaseContainer = gradle.includedBuilds.findResult {
-    return (it.name == 'oblivium') ? it.task(':containers:enclavelet-host-debug:pushImageTest') : null
+enclaveImageSimulation {
+    enclaveObject = buildSignedEnclaveSimulation.outputSignedEnclave
+    publishImageName = rngImageName
+    publishTag = oblivium_version_resolved
+
+    testing {
+        grpcPort = grpcTestPort
+        startTimeout = 60
+    }
 }
 
-buildEnclaveImageDebug {
-    if (publishBaseContainer != null) {
-        dependsOn publishBaseContainer
-    }
+def publishBaseContainer = gradle.includedBuilds.findResult {
+    return (it.name == 'oblivium') ? it.task(':containers:enclavelet-host:buildImagePublish') : null
+}
+
+if (publishBaseContainer) {
+    buildEnclaveImageDebug.dependsOn publishBaseContainer
+    buildEnclaveImageSimulation.dependsOn publishBaseContainer
 }
