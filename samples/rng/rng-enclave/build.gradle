@@ -1,3 +1,4 @@
+// DOCS_ENCLAVE_BUILD_BEGIN
 plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'com.r3.sgx.enclave'
@@ -9,14 +10,6 @@ repositories {
     mavenLocal()
     maven {
         url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-    }
-}
-
-docker {
-    registryCredentials {
-        url = System.getenv("REGISTRY_URL")
-        username = System.getenv("REGISTRY_USERNAME")
-        password = System.getenv("REGISTRY_PASSWORD")
     }
 }
 
@@ -45,6 +38,19 @@ test {
     systemProperty("com.r3.sgx.enclave.path", buildSignedEnclaveSimulation.signedEnclavePath)
 }
 
+enclaveRelease {
+    shouldUseDummyKey = false
+}
+// DOCS_ENCLAVE_BUILD_END
+
+docker {
+    registryCredentials {
+        url = System.getenv("REGISTRY_URL")
+        username = System.getenv("REGISTRY_USERNAME")
+        password = System.getenv("REGISTRY_PASSWORD")
+    }
+}
+
 def oblivium_version_resolved = configurations.runtimeClasspath
         .resolvedConfiguration
         .firstLevelModuleDependencies
@@ -65,8 +71,4 @@ buildEnclaveImageDebug {
     if (publishBaseContainer != null) {
         dependsOn publishBaseContainer
     }
-}
-
-enclaveRelease {
-    shouldUseDummyKey = false
 }

@@ -67,6 +67,7 @@ import java.security.MessageDigest
  * - [createReportData]: the piece of data the enclave provides to be included in an attestation report/quote.
  * - [createHandler]: a factory for [Handler]s that handle incoming connections to the enclave.
  */
+// DOCS_RNG_ENCLAVE_BEGIN
 class RngEnclave : Enclavelet() {
     private lateinit var signatureScheme: SignatureScheme
     private lateinit var keyPair: KeyPair
@@ -86,3 +87,4 @@ class RngEnclave : Enclavelet() {
         return RngHandler(keyPair, signatureScheme, api)
     }
 }
+// DOCS_RNG_ENCLAVE_END

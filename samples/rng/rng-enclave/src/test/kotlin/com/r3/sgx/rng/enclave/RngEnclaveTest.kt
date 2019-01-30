@@ -21,7 +21,7 @@ class RngEnclaveTest {
     // The SGX gradle plugin sets this property to the path of the built+signed enclave.
     private val enclaveFile = File(System.getProperty("com.r3.sgx.enclave.path"))
 
-    private lateinit var enclave: EnclaveHandle<EnclaveletHostHandler.Connected>
+    private lateinit var enclave: EnclaveHandle<EnclaveletHostHandler.Connection>
 
     @Before
     fun setup() {
