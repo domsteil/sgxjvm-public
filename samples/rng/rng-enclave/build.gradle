@@ -56,8 +56,8 @@ enclaveRelease {
 docker {
     registryCredentials {
         url = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_URL")
-        username = System.getenv("OBLIVIUM_REGISTRY_USERNAME")
-        password = System.getenv("OBLIVIUM_REGISTRY_PASSWORD")
+        username = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_USERNAME")
+        password = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_PASSWORD")
     }
 }
 
