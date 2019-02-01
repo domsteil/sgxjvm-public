@@ -1,7 +1,6 @@
 // DOCS_ENCLAVE_BUILD_BEGIN
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id 'com.r3.sgx.enclave'
     id 'com.r3.sgx.host'
 }
 
@@ -14,7 +13,6 @@ repositories {
 }
 
 ext {
-    rngImageName = 'oblivium/oblivium-rng-enclave-server'
     grpcTestPort = 44444
 }
 
@@ -61,23 +59,7 @@ docker {
     }
 }
 
-def oblivium_version_resolved = configurations.runtimeClasspath
-        .resolvedConfiguration
-        .firstLevelModuleDependencies
-        .find { it.moduleName == "api-core-enclave"}
-        .moduleVersion
-
-enclaveImageDebug {
-    enclaveObject = buildSignedEnclaveDebug.outputSignedEnclave
-    publishImageName = rngImageName
-    publishTag = oblivium_version_resolved
-}
-
 enclaveImageSimulation {
-    enclaveObject = buildSignedEnclaveSimulation.outputSignedEnclave
-    publishImageName = rngImageName
-    publishTag = oblivium_version_resolved
-
     testing {
         grpcPort = grpcTestPort
         startTimeout = 60

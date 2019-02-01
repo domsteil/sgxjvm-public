@@ -15,6 +15,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.2' apply false
 }
 
+allprojects {
+    group 'com.r3.sgx'
+}
+
 wrapper {
     gradleVersion = "5.1.1"
     distributionType = Wrapper.DistributionType.ALL
