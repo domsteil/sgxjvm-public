@@ -76,7 +76,7 @@ class RngEnclaveTest {
         // simply typed pointers to a region of an underlying byte blob.
         // A Cursor internally holds an offset into the blob, the size of the region, and an Encoder object describing
         // the layout of the region, which we can use to traverse the blob further down.
-        val signedQuote:        Cursor<ByteBuffer, SgxSignedQuote> = enclave.connected.attestation.getQuote()
+        val signedQuote:        Cursor<ByteBuffer, SgxSignedQuote> = enclave.connection.attestation.getQuote()
         val quote:              Cursor<ByteBuffer, SgxQuote>       = signedQuote[signedQuote.encoder.quote]
         val reportBodyInQuote:  Cursor<ByteBuffer, SgxReportBody>  = quote[SgxQuote.reportBody]
 
@@ -96,7 +96,7 @@ class RngEnclaveTest {
         // handler that records the binary blobs sent by the enclave.
         val handler = BytesRecordingHandler()
         // Now open the channel itself.
-        val channel = enclave.connected.channels.addDownstream(0, handler)
+        val channel = enclave.connection.channels.addDownstream(0, handler)
         val message = ByteBuffer.allocate(4)
         val requestedRandomBytesSize = 256
         message.putInt(requestedRandomBytesSize)
@@ -113,7 +113,7 @@ class RngEnclaveTest {
         // =========================== -- host-enclave boundary
         // ENCLAVE: ecall_enclave_side -- internals of receive in the enclave
         // ENCLAVE: RngHandler.receive -- the receive function in RngHandler, generating/signing the random numbers
-        // ENCLAVE: connected.send     -- the enclave is replying here
+        // ENCLAVE: connection.send     -- the enclave is replying here
         // ENCLAVE: ocall_enclave_side -- internals of send, which translates to an OCALL
         // =========================== -- enclave-host boundary
         // HOST:    ocall_host_side    -- internals of receive in the host
@@ -147,6 +147,6 @@ class RngEnclaveTest {
         )
 
         // Close the channel.
-        enclave.connected.channels.removeDownstream(0)
+        enclave.connection.channels.removeDownstream(0)
     }
 }
