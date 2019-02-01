@@ -20,7 +20,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
 
-    testImplementation project(':samples:rng:rng-client')
+    testImplementation project(':samples:rng:rng-client-common')
     testImplementation "org.jetbrains.kotlin:kotlin-test"
     testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
     testImplementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"

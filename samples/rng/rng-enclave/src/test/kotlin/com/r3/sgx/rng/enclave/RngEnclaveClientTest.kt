@@ -2,7 +2,7 @@ package com.r3.sgx.rng.enclave
 
 import com.r3.sgx.core.common.SchemesSettings
 import com.r3.sgx.enclavelethost.client.Crypto
-import com.r3.sgx.rng.client.RngEnclaveletHostClient
+import com.r3.sgx.rng.client.common.RngEnclaveletHostClient
 import org.junit.BeforeClass
 import org.junit.Test
 import org.slf4j.Logger
