@@ -4,6 +4,7 @@ import com.r3.sgx.core.common.SchemesSettings
 import com.r3.sgx.core.common.SgxQuote
 import com.r3.sgx.core.common.SgxReportBody
 import com.r3.sgx.enclavelethost.client.Crypto
+import com.r3.sgx.rng.client.common.RngEnclaveletHostClient
 import picocli.CommandLine
 import java.nio.ByteBuffer
 import java.security.GeneralSecurityException

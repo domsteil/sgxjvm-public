@@ -1,0 +1,17 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven {
+        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "com.r3.sgx:enclavelet-host-client:$oblivium_version"
+    compile "com.r3.sgx:api-core-common:$oblivium_version"
+}

@@ -14,7 +14,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "info.picocli:picocli:$picocli_version"
-    implementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"
+    implementation project(':samples:rng:rng-client-common')
     implementation "com.r3.sgx:api-core-common:$oblivium_version"
 }
 

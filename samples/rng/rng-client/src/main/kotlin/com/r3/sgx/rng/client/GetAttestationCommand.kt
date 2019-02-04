@@ -1,5 +1,6 @@
 package com.r3.sgx.rng.client
 
+import com.r3.sgx.rng.client.common.RngEnclaveletHostClient
 import picocli.CommandLine
 import java.util.*
 import java.util.concurrent.Callable

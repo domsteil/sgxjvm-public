@@ -1,4 +1,4 @@
-package com.r3.sgx.rng.client
+package com.r3.sgx.rng.client.common
 
 import com.google.protobuf.ByteString
 import com.r3.sgx.enclavelethost.grpc.*
