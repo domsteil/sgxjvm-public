@@ -6,7 +6,6 @@ import com.r3.sgx.enclavelethost.client.EnclaveletMetadata
 import com.r3.sgx.enclavelethost.client.EpidAttestationVerificationBuilder
 import com.r3.sgx.enclavelethost.client.QuoteConstraint
 import com.r3.sgx.enclavelethost.grpc.EpidAttestation
-import com.sun.javaws.exceptions.InvalidArgumentException
 import picocli.CommandLine
 import java.io.File
 import java.nio.ByteBuffer
