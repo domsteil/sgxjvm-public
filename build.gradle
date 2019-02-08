@@ -12,10 +12,13 @@ buildscript {
 
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
-    id 'com.github.johnrengelman.shadow' version '4.0.2' apply false
+}
+
+allprojects {
+    group 'com.r3.sgx'
 }
 
 wrapper {
-    gradleVersion = "5.1.1"
+    gradleVersion = "5.2"
     distributionType = Wrapper.DistributionType.ALL
 }

@@ -1,7 +1,6 @@
 // DOCS_ENCLAVE_BUILD_BEGIN
 plugins {
     id 'org.jetbrains.kotlin.jvm'
-    id 'com.r3.sgx.enclave'
     id 'com.r3.sgx.host'
 }
 
@@ -14,7 +13,6 @@ repositories {
 }
 
 ext {
-    rngImageName = 'oblivium/oblivium-rng-enclave-server'
     grpcTestPort = 44444
 }
 
@@ -22,7 +20,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
 
-    testImplementation project(':samples:rng:rng-client')
+    testImplementation project(':samples:rng:rng-client-common')
     testImplementation "org.jetbrains.kotlin:kotlin-test"
     testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
     testImplementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"
@@ -56,28 +54,12 @@ enclaveRelease {
 docker {
     registryCredentials {
         url = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_URL")
-        username = System.getenv("OBLIVIUM_REGISTRY_USERNAME")
-        password = System.getenv("OBLIVIUM_REGISTRY_PASSWORD")
+        username = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_USERNAME")
+        password = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_PASSWORD")
     }
 }
 
-def oblivium_version_resolved = configurations.runtimeClasspath
-        .resolvedConfiguration
-        .firstLevelModuleDependencies
-        .find { it.moduleName == "api-core-enclave"}
-        .moduleVersion
-
-enclaveImageDebug {
-    enclaveObject = buildSignedEnclaveDebug.outputSignedEnclave
-    publishImageName = rngImageName
-    publishTag = oblivium_version_resolved
-}
-
 enclaveImageSimulation {
-    enclaveObject = buildSignedEnclaveSimulation.outputSignedEnclave
-    publishImageName = rngImageName
-    publishTag = oblivium_version_resolved
-
     testing {
         grpcPort = grpcTestPort
         startTimeout = 60

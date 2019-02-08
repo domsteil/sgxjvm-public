@@ -1,7 +1,8 @@
 rootProject.name = "oblivium-public"
 
-include ':samples:rng:rng-enclave'
+include ':samples:rng:rng-client-common'
 include ':samples:rng:rng-client'
+include ':samples:rng:rng-enclave'
 
 // Optional compositing of oblivium
 if (file("$rootDir/oblivium").isDirectory()) {
