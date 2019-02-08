@@ -2,8 +2,9 @@ package com.r3.sgx.rng.client
 
 import com.r3.sgx.core.common.Cursor
 import com.r3.sgx.core.common.SgxQuote
+import com.r3.sgx.enclavelethost.client.EnclaveletMetadata
 import com.r3.sgx.enclavelethost.client.EpidAttestationVerificationBuilder
-import com.r3.sgx.enclavelethost.client.measurement.MeasurementTrust
+import com.r3.sgx.enclavelethost.client.QuoteConstraint
 import com.r3.sgx.enclavelethost.grpc.EpidAttestation
 import picocli.CommandLine
 import java.io.File
@@ -29,18 +30,16 @@ open class VerifyingCommand {
     var acceptConfigurationNeeded: Boolean = false
 
     @CommandLine.Option(
-            names = ["-t", "--trust-file"],
-            description = ["Optional yaml file containing trusted enclave measurements. By default all measurements are accepted."]
+            names = ["-e", "--enclavelet-metadata"],
+            description = ["Yaml file containing enclavelet metadata generated during the build process"],
+            required = true
     )
-    var trustedMeasurementsFile: File? = null
-
-    private val trustedMeasurements get() =
-        trustedMeasurementsFile?.let {
-            MeasurementTrust.load(it).get("com.r3.sgx.rng.enclave.RngEnclave")
-        } ?: MeasurementTrust.All
+    var metadataFile: File? = null
 
     fun verifyAttestation(attestation: EpidAttestation): Cursor<ByteBuffer, SgxQuote> {
-        val verification = EpidAttestationVerificationBuilder(trustedMeasurements)
+        val expectedMeasurement = EnclaveletMetadata.read(metadataFile!!).measurement
+        val quoteConstraints = listOf(QuoteConstraint.ValidMeasurements(expectedMeasurement))
+        val verification = EpidAttestationVerificationBuilder(quoteConstraints)
                 .withAcceptConfigurationNeeded(acceptConfigurationNeeded)
                 .withAcceptGroupOutOfDate(acceptGroupOutOfDate)
                 .withAcceptDebug(acceptDebug)
