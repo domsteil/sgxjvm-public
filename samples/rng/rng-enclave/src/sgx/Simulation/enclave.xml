@@ -1,5 +1,5 @@
 <EnclaveConfiguration>
-    <ProdID>0</ProdID>
+    <ProdID>1</ProdID>
     <ISVSVN>0</ISVSVN>
     <StackMaxSize>0x280000</StackMaxSize>
     <HeapMaxSize>0x8000000</HeapMaxSize>
