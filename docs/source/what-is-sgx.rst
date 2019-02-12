@@ -109,8 +109,8 @@ approach would be make more efficient use of bandwidth.
 References
 ----------
 
-`SGX Explained (paper) <https://eprint.iacr.org/2016/086.pdf>_`
-`Intel Attestation Service API <https://software.intel.com/sites/default/files/managed/7e/3b/ias-api-spec.pdf>`_
-`Intel SGX Developer Guide <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Guide.pdf>`_
-`Intel SGX Developer Reference <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Reference_Linux_2.4_Open_Source.pdf>`_
-`Intel x86 Instruction Reference <https://www.intel.co.uk/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-manual-325462.pdf>`_
+* `SGX Explained paper <https://eprint.iacr.org/2016/086.pdf>`_
+* `Intel Attestation Service API <https://software.intel.com/sites/default/files/managed/7e/3b/ias-api-spec.pdf>`_
+* `Intel SGX Developer Guide <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Guide.pdf>`_
+* `Intel SGX Developer Reference <https://download.01.org/intel-sgx/linux-2.4/docs/Intel_SGX_Developer_Reference_Linux_2.4_Open_Source.pdf>`_
+* `Intel x86 Instruction Reference <https://www.intel.co.uk/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-manual-325462.pdf>`_
