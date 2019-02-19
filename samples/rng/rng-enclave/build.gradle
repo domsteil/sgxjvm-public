@@ -58,9 +58,9 @@ enclaveRelease {
 
 docker {
     registryCredentials {
-        url = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_URL")
-        username = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_USERNAME")
-        password = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_PASSWORD")
+        url      = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_URL")      ?: "localhost:5000"
+        username = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_USERNAME") ?: null
+        password = System.getenv("OBLIVIUM_CONTAINER_REGISTRY_PASSWORD") ?: null
     }
 }
 
@@ -80,11 +80,11 @@ enclaveImageDebug {
     publishImageName = "$name-dev"
 }
 
-def publishBaseContainer = gradle.includedBuilds.findResult {
+def buildBaseImage = gradle.includedBuilds.findResult {
     return (it.name == 'oblivium') ? it.task(':containers:enclavelet-host:buildImagePublish') : null
 }
 
-if (publishBaseContainer) {
-    buildEnclaveImageDebug.dependsOn publishBaseContainer
-    buildEnclaveImageSimulation.dependsOn publishBaseContainer
+if (buildBaseImage) {
+    buildEnclaveImageDebug.dependsOn buildBaseImage
+    buildEnclaveImageSimulation.dependsOn buildBaseImage
 }

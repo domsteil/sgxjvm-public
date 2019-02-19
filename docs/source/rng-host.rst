@@ -20,16 +20,17 @@ If you're running the enclave outside of simulation mode, run:
 
 .. parsed-literal::
 
-    java -Doblivium.build=Debug -jar host.jar samples/rng/rng-enclave/build/enclave/Debug/rng-enclave.signed.so
+    java -Doblivium.build=Debug -jar host.jar --debug samples/rng/rng-enclave/build/enclave/Debug/rng-enclave.signed.so
+
+The above will hopefully load the enclave and bind port 8080, where the host will be accepting incoming gRPC
+connections to forward to the enclave. ``-Doblivium.build=Debug`` will cause the host to use native libraries with debug
+symbols, whereas ``--debug`` will cause the host to load the enclave in DEBUG mode.
 
 If you're running the enclave in simulation mode, run:
 
 .. parsed-literal::
 
-    java -Doblivium.build=Simulation -jar host.jar samples/rng/rng-enclave/build/enclave/Simulation/rng-enclave.signed.so
-
-This will load the enclave and bind port 8080, where the host will be accepting incoming gRPC connections to forward to
-the enclave. ``-Doblivium.build=Debug`` will cause the host to use native libraries with debug symbols.
+    java -Doblivium.build=Simulation -jar host.jar --debug samples/rng/rng-enclave/build/enclave/Simulation/rng-enclave.signed.so
 
 For more command line options run:
 
