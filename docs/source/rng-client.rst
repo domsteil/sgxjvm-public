@@ -8,8 +8,8 @@ RNG Client
 The project contains a simple CLI tool that can connect to an :ref:`rng-host`,
 retrieve and verify attestation data, and request some RNG.
 
-To build the tool
------------------
+Build the client
+----------------
 
 .. parsed-literal::
 
@@ -24,7 +24,9 @@ To see the full usage:
 
     java -jar |rng-client-jar| --help
 
-To retrieve attestation data:
+Outside of simulation mode, we can ask the enclave to produce an attestation.
+
+To retrieve the attestation data:
 
 .. parsed-literal::
 
@@ -33,7 +35,7 @@ To retrieve attestation data:
 The above will connect to a host running on ``localhost:8080``, retrieve and pipe the attestation data into a file
 ``attestation``.
 
-To view attestation data:
+To view the attestation data:
 
 .. parsed-literal::
 
@@ -42,7 +44,7 @@ To view attestation data:
 The above will read the attestation data from the ``attestation`` file and print a (mostly) human-readable
 representation of it.
 
-To verify attestation data:
+To verify the attestation data:
 
 .. parsed-literal::
 
@@ -58,11 +60,11 @@ use:
 Similarly there are some non-critical IAS responses that you may want to
 accept. See the command-specific ``--help`` for more options.
 
-To retrieve verified and signed RNG:
+To retrieve a verified and signed RNG:
 
 .. parsed-literal::
 
     java -jar |rng-client-jar| get-random localhost:8080
 
-``get-random`` accepts similar flags to ``verify-attestation``, as it does full verification of the quote. If successful
-it will print some base64 encoded randomness it received from the enclave.
+``get-random`` accepts similar flags to ``verify-attestation``, as it does full verification of the quote. If
+successful, it will print some base64 encoded randomness it received from the enclave.

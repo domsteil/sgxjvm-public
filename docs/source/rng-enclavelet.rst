@@ -1,4 +1,4 @@
-RNG enclavelet
+RNG Enclavelet
 ##############
 
 `The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public/samples/rng>`_.
@@ -11,6 +11,9 @@ that the stream of random numbers came from a genuine Intel CPU that generated t
 generation circuitry.
 
 .. important:: If any terminology on this page is unfamiliar to you, start by reading ":doc:`what-is-sgx`".
+
+.. important:: If you do not have access to SGX, you can still run the RNG enclavelet project using simulation mode,
+   documented below.
 
 .. warning:: Despite using Java, at this time only Linux is supported as a development platform. If you use other platforms
    like macOS or Windows you can set up a shared network drive to hold your project and issue build / run commands via SSH.
@@ -53,24 +56,29 @@ reverse engineering.
 How to build the enclave
 ------------------------
 
-.. sourcecode:: bash
-
-    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation
-
-The above will build an enclave linked against **simulation libraries** in
-``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``. This means this enclave won't be loaded as a
-proper SGX enclave, but will use simulated behaviour instead. This is useful for development/debugging or playing around
-with the tech without access to SGX.
-
-To build a properly linked enclave use:
+From the top level of the `oblivium-public repository <https://github.com/corda/oblivium-public/>`_, build a properly
+linked enclave using:
 
 .. sourcecode:: bash
 
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
 
-The above enclaves can be loaded onto an SGX device, however loading
-these requires further setup. See :ref:`sgx-setup`.
+The resulting enclave can be found in ``samples/rng/rng-enclave/build/enclave/Debug/enclave.signed.so`` or
+``samples/rng/rng-enclave/build/enclave/Release/enclave.signed.so``.
+
+You can also build the enclave in simulation mode:
+
+.. sourcecode:: bash
+
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation
+
+The resulting enclave can be found in ``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``. This
+enclave is linked against **simulation libraries**, meaning that this enclave won't be loaded as a proper SGX enclave,
+but will use simulated behaviour instead. This is useful for development/debugging or playing around with the tech
+without access to SGX.
+
+The above enclaves can be loaded onto an SGX device. Loading these requires further setup. See :ref:`sgx-setup`.
 
 To test the build enclave:
 

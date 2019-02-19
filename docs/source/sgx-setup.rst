@@ -5,7 +5,8 @@ SGX Setup
 
 In order to run a fully fledged enclave host we need a working SGX setup. For this:
 
-#. You need to run a Linux-based distribution. Oblivium currently only supports ELF-based enclaves.
+#. You need to run a Linux-based distribution.
+    Oblivium currently only supports ELF-based enclaves.
 
 #. You need an SGX-capable CPU.
     See `<https://github.com/ayeks/SGX-hardware>`_ for a non-comprehensive list
@@ -69,5 +70,5 @@ In order to run a fully fledged enclave host we need a working SGX setup. For th
         aesm_service[8]: [ADMIN]Platform Services initialization failed due to DAL error
         aesm_service[8]: [ADMIN]White list update request successful for Version: 43
 
-    The DAL error is irrelevant, it's related to SGX functionality that
+    The DAL error is irrelevant. It's related to SGX functionality that
     is generally not safe to enable as it relies on the ME.

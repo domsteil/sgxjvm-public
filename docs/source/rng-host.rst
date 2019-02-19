@@ -9,27 +9,33 @@ requires a working :ref:`sgx-setup`.
 Run the host.jar directly
 -------------------------
 
-Download the latest enclavelet host artifact.
-
-  .. parsed-literal::
-
-      wget '|OBLIVIUM_MAVEN_URL|/|OBLIVIUM_MAVEN_REPOSITORY|/com/r3/sgx/enclavelet-host-server/|OBLIVIUM_VERSION|/enclavelet-host-server-|OBLIVIUM_VERSION|-all.jar' -O host.jar
-
-Then to run:
+From the top level of the `oblivium-public repository <https://github.com/corda/oblivium-public/>`_, download the
+latest enclavelet host artifact:
 
 .. parsed-literal::
 
-    java -Doblivium.build=Debug -jar host.jar samples/rng/rng-enclave/build/enclave/Debug/enclave.signed.so
+    wget '|OBLIVIUM_MAVEN_URL|/|OBLIVIUM_MAVEN_REPOSITORY|/com/r3/sgx/enclavelet-host-server/|OBLIVIUM_VERSION|/enclavelet-host-server-|OBLIVIUM_VERSION|-all.jar' -O host.jar
 
-The above will hopefully load the enclave and bind port 8080, where the host will be accepting incoming gRPC
-connections to forward to the enclave. ``-Doblivium.build=Debug`` will cause the host to use native libraries with debug
-symbols.
+If you're running the enclave outside of simulation mode, run:
+
+.. parsed-literal::
+
+    java -Doblivium.build=Debug -jar host.jar samples/rng/rng-enclave/build/enclave/Debug/rng-enclave.signed.so
+
+If you're running the enclave in simulation mode, run:
+
+.. parsed-literal::
+
+    java -Doblivium.build=Simulation -jar host.jar samples/rng/rng-enclave/build/enclave/Simulation/rng-enclave.signed.so
+
+This will load the enclave and bind port 8080, where the host will be accepting incoming gRPC connections to forward to
+the enclave. ``-Doblivium.build=Debug`` will cause the host to use native libraries with debug symbols.
 
 For more command line options run:
 
 .. parsed-literal::
 
-    java -Doblivium.build=Debug -jar host.jar --help
+    java -jar host.jar --help
 
 There's also a configuration file you can provide that allows setting finer-grained options, as well as switch to a
 different SPID:
@@ -75,7 +81,44 @@ Interact with the host
 
 To interact with the host you can connect to it through gRPC. The interface:
 
-.. literalinclude:: ../../oblivium/enclavelet-host/enclavelet-host-common/src/main/proto/enclavelet-host.proto
-    :language: proto
+.. sourcecode:: proto
+
+    syntax = "proto2";
+
+    option java_multiple_files = true;
+    option java_package = "com.r3.sgx.enclavelethost.grpc";
+    option java_outer_classname = "EnclaveletHostApi";
+    option objc_class_prefix = "HLW";
+
+    package proto;
+
+    service EnclaveletHost {
+        // Request a signed quote of the enclave instance.
+        rpc GetEpidAttestation (GetEpidAttestationRequest) returns (GetEpidAttestationResponse);
+
+        // Establish a session with an enclave.
+        rpc OpenSession (stream ClientMessage) returns (stream ServerMessage);
+    }
+
+    message GetEpidAttestationRequest {
+    }
+
+    message GetEpidAttestationResponse {
+        required EpidAttestation attestation = 1;
+    }
+
+    message ClientMessage {
+        required bytes blob = 1;
+    }
+
+    message ServerMessage {
+        required bytes blob = 1;
+    }
+
+    message EpidAttestation {
+        required bytes ias_response = 1;
+        required string ias_certificate = 2;
+        required bytes ias_signature = 3;
+    }
 
 There is also a sample :ref:`rng-client` showcasing how to interact with the host.
