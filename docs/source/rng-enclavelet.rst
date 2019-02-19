@@ -99,12 +99,11 @@ At this time you are required to create a file called ``enclave.xml`` for each e
 that configure the SGX SDK enclave build process, and looks like this:
 
 .. literalinclude:: ../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
-:language: xml
+    :language: xml
 
+The important values here are:
 
-    The important values here are:
-
-    * ``ProdID`` - This is a number identifying your enclave's functionality. If you create another type of enclave it
+* ``ProdID`` - This is a number identifying your enclave's functionality. If you create another type of enclave it
   should be assigned a different number. This together with ``ISVSVN`` is used internally when deriving
   certain sealing keys.
 * ``ISVSVN`` - This is a version number of your enclave and should be incremented whenever you release a new version of.
