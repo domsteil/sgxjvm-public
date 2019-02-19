@@ -89,6 +89,35 @@ To test the build enclave:
 The above will build and sign a Simulation enclave with a dummy MRSIGNER key and run a test against it.
 The test loads the enclave, requests some random numbers, and checks the enclave signature.
 
+.. _enclave_xml:
+
+enclave.xml
+~~~~~~~~~~~
+
+At this time you are required to create a file called ``enclave.xml`` for each enclave build type in
+``src/sgx/Simulation``, ``src/sgx/Debug`` and ``src/sgx/Release`` in your project. This file contains various values
+that configure the SGX SDK enclave build process, and looks like this:
+
+.. literalinclude:: ../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
+:language: xml
+
+
+    The important values here are:
+
+    * ``ProdID`` - This is a number identifying your enclave's functionality. If you create another type of enclave it
+  should be assigned a different number. This together with ``ISVSVN`` is used internally when deriving
+  certain sealing keys.
+* ``ISVSVN`` - This is a version number of your enclave and should be incremented whenever you release a new version of.
+  A sealing key derived using an older ``ISVSVN`` can be re-derived with a newer one. In this way secrets encrypted
+  with older enclaves may be decrypted with newer ones. Note that this only works if the enclave is sealing to
+  MRSIGNER, and only when the two enclaves have the same ``ProdID``.
+* ``HeapMaxSize`` - This is the maximum amount of memory available to the enclave, in hex.
+* ``DisableDebug`` - This needs to be set to 1 when building a Release mode enclave.
+* ``TCSNum`` - The number of available Thread Control Structures. This bounds the number of threads that may enter the
+  enclave at the same time. Note that the enclave JVM requires two TCSs for its own operation, so this number should be
+  set to <number of threads you want to create>+2. This number should also be aligned with the enclave host's thread
+  pool settings.
+
 The Gradle build
 ----------------
 
@@ -202,32 +231,3 @@ and remove the handler from the tree. If you haven't kept a reference to it arou
 eventually clean up the handler and its resources.
 
 .. note:: There is currently no API for the enclave itself to force a channel disconnect.
-
-.. _enclave_xml:
-
-enclave.xml
-~~~~~~~~~~~
-
-At this time you are required to create a file called ``enclave.xml`` for each enclave build type in
-``src/sgx/Simulation``, ``src/sgx/Debug`` and ``src/sgx/Release`` in your project. This file contains various values
-that configure the SGX SDK enclave build process, and looks like this:
-
-.. literalinclude:: ../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
-   :language: xml
-
-
-The important values here are:
-
-* ``ProdID`` - This is a number identifying your enclave's functionality. If you create another type of enclave it
-  should be assigned a different number. This together with ``ISVSVN`` is used internally when deriving
-  certain sealing keys.
-* ``ISVSVN`` - This is a version number of your enclave and should be incremented whenever you release a new version of.
-  A sealing key derived using an older ``ISVSVN`` can be re-derived with a newer one. In this way secrets encrypted
-  with older enclaves may be decrypted with newer ones. Note that this only works if the enclave is sealing to
-  MRSIGNER, and only when the two enclaves have the same ``ProdID``.
-* ``HeapMaxSize`` - This is the maximum amount of memory available to the enclave, in hex.
-* ``DisableDebug`` - This needs to be set to 1 when building a Release mode enclave.
-* ``TCSNum`` - The number of available Thread Control Structures. This bounds the number of threads that may enter the
-  enclave at the same time. Note that the enclave JVM requires two TCSs for its own operation, so this number should be
-  set to <number of threads you want to create>+2. This number should also be aligned with the enclave host's thread
-  pool settings.
