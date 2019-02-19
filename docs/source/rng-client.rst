@@ -73,11 +73,12 @@ use:
 Similarly there are some non-critical IAS responses that you may want to
 accept. See the command-specific ``--help`` for more options.
 
-Finally to retrieve a verified and signed RNG:
+Finally to retrieve a 1Kb random byte array:
 
 .. parsed-literal::
 
     java -jar |rng-client-jar| get-random localhost:8080 -e |rng-enclave-debug-metadata|
 
-``get-random`` accepts similar flags to ``verify-attestation``, as it does full verification of the quote. If
-successful, it will print some base64 encoded randomness it received from the enclave.
+``get-random`` accepts similar flags to ``verify-attestation``, as it does full verification of the quote. In addition
+it checks that the signature over the returned bytes is done by the key in the quote. If successful, it will print some
+base64 encoded randomness it received from the enclave.
