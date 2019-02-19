@@ -1,5 +1,5 @@
 .. |rng-client-jar| replace:: samples/rng/rng-client/build/libs/rng-client.jar
-.. |rng-enclave-debug-metadata| replace:: samples/rng/rng-enclave/build/enclave/Debug/rng-enclave.metadata.yml
+.. |rng-enclave-debug-metadata| replace:: samples/rng/rng-enclave/build/enclave/Debug/enclave.metadata.yml
 
 .. _rng-client:
 
