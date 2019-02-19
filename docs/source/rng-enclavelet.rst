@@ -131,7 +131,7 @@ Here is the basic template you should use:
    :start-after: DOCS_ENCLAVE_BUILD_BEGIN
    :end-before: DOCS_ENCLAVE_BUILD_END
 
-Set ``oblivium_version=`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
+Set ``oblivium_version`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
 you want to use in your ``settings.gradle`` file. Kotlin is not required to use Oblivium, but the RNG enclave does use it.
 
 Most of this is standard Gradle logic, so if it's not clear please refer to the Gradle user guide. We use the "shadow JAR"
