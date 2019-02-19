@@ -7,7 +7,7 @@ import java.util.concurrent.Callable
 
 @CommandLine.Command(
         name = "verify-attestation",
-        description = ["Verifies the attestation data"],
+        description = ["Reads and verifies attestation data from the standard input"],
         mixinStandardHelpOptions = true
 )
 class VerifyAttestationCommand : VerifyingCommand(), Callable<Unit> {
