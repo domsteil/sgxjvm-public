@@ -21,6 +21,7 @@ In this tutorial we will:
 .. toctree::
 
    sgx-setup
+   sgx-gradle-plugins
    handler-trees
    rng-enclavelet
    rng-host
