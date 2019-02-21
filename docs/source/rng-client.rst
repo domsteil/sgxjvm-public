@@ -80,6 +80,8 @@ To then do the verification:
 
     java -jar |rng-client-jar| verify-attestation -e |rng-enclave-debug-metadata| < attestation
 
+No output indicates that the verification was successful.
+
 Note that the above will *fail* if the enclave is loaded in DEBUG mode. To temporarily accept DEBUG quotes for testing
 use:
 
