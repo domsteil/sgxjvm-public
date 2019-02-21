@@ -21,8 +21,8 @@ against a set of known-good measurements, then encrypt and provision secrets.
 .. toctree::
 
    sgx-setup
-   sgx-gradle-plugins
-   handler-trees
    rng-enclavelet
    rng-host
    rng-client
+   sgx-gradle-plugins
+   handler-trees
