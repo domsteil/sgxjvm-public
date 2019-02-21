@@ -71,8 +71,8 @@ metadata file generated while building the enclave itself.
 The above will build a debug/release RNG enclave and generate a metadata file next to it. For example for the Debug
 enclave this will be |rng-enclave-debug-metadata|.
 
-.. warning:: Each machine will generate a unique measurement for a given enclave. You must perform this step on the RNG
-   host machine.
+.. warning:: In debug mode, each machine will generate a unique measurement for a given enclave, and you must therefore
+   perform this step on the RNG host machine.
 
 To then do the verification:
 
