@@ -6,8 +6,10 @@
 RNG Client
 ##########
 
+.. contents::
+
 The project contains a simple CLI tool that can connect to an :ref:`rng-host`,
-retrieve and verify attestation data, and request some RNG.
+retrieve and verify attestation data, and request a securely-generated 1Kb random byte array.
 
 Build the client
 ----------------
@@ -25,7 +27,13 @@ To see the full usage:
 
     java -jar |rng-client-jar| --help
 
+Attestations
+~~~~~~~~~~~~
+
 Outside of simulation mode, we can ask the enclave to produce an attestation.
+
+Retrieving attestations
+^^^^^^^^^^^^^^^^^^^^^^^
 
 To retrieve the attestation data:
 
@@ -36,6 +44,9 @@ To retrieve the attestation data:
 The above will connect to a host running on ``localhost:8080``, retrieve and pipe the attestation data into a file
 ``attestation``.
 
+Viewing attestations
+^^^^^^^^^^^^^^^^^^^^
+
 To view the attestation data:
 
 .. parsed-literal::
@@ -44,6 +55,9 @@ To view the attestation data:
 
 The above will read the attestation data from the ``attestation`` file and print a (mostly) human-readable
 representation of it.
+
+Verifying attestations
+^^^^^^^^^^^^^^^^^^^^^^
 
 To verify the attestation data we need to tell the client what enclave measurement to trust. For this we can use the
 metadata file generated while building the enclave itself.
@@ -73,7 +87,10 @@ use:
 Similarly there are some non-critical IAS responses that you may want to
 accept. See the command-specific ``--help`` for more options.
 
-Finally to retrieve a 1Kb random byte array:
+Computations
+~~~~~~~~~~~~
+
+Finally, to retrieve a securely-generated 1Kb random byte array:
 
 .. parsed-literal::
 
