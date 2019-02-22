@@ -72,7 +72,7 @@ The above will build a debug/release RNG enclave and generate a metadata file ne
 enclave this will be |rng-enclave-debug-metadata|.
 
 .. warning:: In debug mode, each machine will generate a unique measurement for a given enclave, and you must therefore
-   perform this step on the RNG host machine.
+   make sure that the host you're connecting to loads this specific enclave.
 
 To then do the verification:
 
