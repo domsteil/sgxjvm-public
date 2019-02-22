@@ -1,13 +1,14 @@
 RNG Enclavelet
 ##############
 
-`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public/samples/rng>`_.
+.. contents::
 
 Overview
 --------
 
-This project shows you how to generate and sign random numbers. Users who remotely attest with the enclave can be sure
-that the stream of random numbers came from a genuine Intel CPU that generated the numbers using the on-board random number
+`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public/samples/rng>`_. This
+project shows you how to generate and sign random numbers. Users who remotely attest with the enclave can be sure that
+the stream of random numbers came from a genuine Intel CPU that generated the numbers using the on-board random number
 generation circuitry.
 
 .. important:: If any terminology on this page is unfamiliar to you, start by reading ":doc:`what-is-sgx`".
@@ -42,12 +43,14 @@ There are three ways to build an enclave:
 2. Debug mode
 3. Release mode
 
-In simulation mode no SGX hardware is required. It's convenient for testing. In debug mode, a real SGX enclave will
-be instantiated and run, however a back door is left in that allows the untrusted world to read and write enclave
-memory despite the usual protections. This is good for (as the name implies) debugging, but it also serves a second
-purpose. To close the back door by using release mode, your enclave must be signed by an Intel whitelisted key. Intel
-will revoke keys that are being used to create malware using SGX to implement CryptoLocker style viruses or avoid
-reverse engineering.
+In simulation mode, no SGX hardware is required. It's convenient for testing or playing around with the tech without
+access to SGX. In debug mode, a real SGX enclave will be instantiated and run, however a back door is left in that
+allows the untrusted world to read and write enclave memory despite the usual protections. This is good for (as the
+name implies) debugging, but it also serves a second purpose. To close the back door by using release mode, your
+enclave must be signed by an Intel whitelisted key. Intel will revoke keys that are being used to create malware using
+SGX to implement CryptoLocker style viruses or avoid reverse engineering.
+
+.. warning:: Release mode has not been tested as of version 1.0-RC04.
 
 .. important:: Future versions of SGX support "flexible launch policy" which allows the owner of a machine to whitelist
    their own enclaves. Intel's own signing infrastructure will become used primarily for enclaves running on,
@@ -63,20 +66,13 @@ linked enclave using:
 
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation # Build a simulation enclave.
 
-The resulting enclave can be found in ``samples/rng/rng-enclave/build/enclave/Debug/enclave.signed.so`` or
-``samples/rng/rng-enclave/build/enclave/Release/enclave.signed.so``.
+The resulting enclave can be found in:
 
-You can also build the enclave in simulation mode:
-
-.. sourcecode:: bash
-
-    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation
-
-The resulting enclave can be found in ``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``. This
-enclave is linked against **simulation libraries**, meaning that this enclave won't be loaded as a proper SGX enclave,
-but will use simulated behaviour instead. This is useful for development/debugging or playing around with the tech
-without access to SGX.
+* Debug: ``samples/rng/rng-enclave/build/enclave/Debug/enclave.signed.so``
+* Release: ``samples/rng/rng-enclave/build/enclave/Release/enclave.signed.so``
+* Simulation: ``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``
 
 The above enclaves can be loaded onto an SGX device. Loading these requires further setup. See :ref:`sgx-setup`.
 

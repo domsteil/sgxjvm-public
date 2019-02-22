@@ -3,6 +3,8 @@
 RNG Host
 ########
 
+.. contents::
+
 Oblivium provides a generic host process that can load any enclavelet. Hosting of an enclave
 requires a working :ref:`sgx-setup`.
 
@@ -16,7 +18,7 @@ latest enclavelet host artifact:
 
     wget '|OBLIVIUM_MAVEN_URL|/|OBLIVIUM_MAVEN_REPOSITORY|/com/r3/sgx/enclavelet-host-server/|OBLIVIUM_VERSION|/enclavelet-host-server-|OBLIVIUM_VERSION|-all.jar' -O host.jar
 
-If you're running the enclave outside of simulation mode, run:
+To run the enclave in debug mode, run:
 
 .. parsed-literal::
 
@@ -26,7 +28,7 @@ The above will hopefully load the enclave and bind port 8080, where the host wil
 connections to forward to the enclave. ``-Doblivium.build=Debug`` will cause the host to use native libraries with debug
 symbols, whereas ``--debug`` will cause the host to load the enclave in DEBUG mode.
 
-If you're running the enclave in simulation mode, run:
+To run the enclave in simulation mode, run:
 
 .. parsed-literal::
 
