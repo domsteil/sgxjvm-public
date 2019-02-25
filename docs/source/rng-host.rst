@@ -24,9 +24,9 @@ To run the enclave in debug mode, run:
 
     java -jar host.jar -m DEBUG samples/rng/rng-enclave/build/enclave/Debug/enclave.signed.so
 
-The above will hopefully load the enclave and bind port 8080, where the host will be accepting incoming gRPC
-connections to forward to the enclave. ``-m DEBUG`` will cause the host to use native libraries with debug
-symbols, and to load the enclave in DEBUG mode.
+The above will load the enclave and bind port 8080, where the host will be accepting incoming gRPC connections to
+forward to the enclave. ``-m DEBUG`` will cause the host to use native libraries with debug symbols, and to load the
+enclave in DEBUG mode.
 
 To run the enclave in simulation mode, run:
 
