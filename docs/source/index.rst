@@ -42,7 +42,7 @@ Future versions of the platform will offer:
 In the coming years the framework will evolve to support use of pure cryptographic techniques like zero knowledge proofs
 and multi-party computation, when the nature of your enclavelet and your performance requirements allow for it.
 
-.. important:: Oblivium does not currently provide a stable API. The enclavelet API may change between released without notice.
+.. important:: Oblivium does not currently provide a stable API. The enclavelet API may change between releases without notice.
 
 This website will teach you how SGX works and how to write enclavelets.
 
