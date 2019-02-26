@@ -1,14 +1,9 @@
 package com.r3.sgx.rng.enclave
 
 import com.r3.sgx.core.common.*
-import com.r3.sgx.core.host.EnclaveHandle
-import com.r3.sgx.core.host.EnclaveletHostHandler
-import com.r3.sgx.core.host.EpidAttestationHostConfiguration
-import com.r3.sgx.core.host.NativeHostApi
-import com.r3.sgx.core.host.internal.Native
+import com.r3.sgx.core.host.*
 import com.r3.sgx.enclavelethost.client.Crypto
 import com.r3.sgx.testing.BytesRecordingHandler
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -20,7 +15,7 @@ import kotlin.test.assertEquals
 class RngEnclaveTest {
     // The SGX gradle plugin sets this property to the path of the built+signed enclave.
     private val enclaveFile = File(System.getProperty("com.r3.sgx.enclave.path"))
-
+    private val hostApi = NativeHostApi(EnclaveLoadMode.SIMULATION)
     private lateinit var enclave: EnclaveHandle<EnclaveletHostHandler.Connection>
 
     @Before
@@ -51,12 +46,8 @@ class RngEnclaveTest {
 
         // Create the enclave itself, setting up the host with EnclaveletHostHandler(), which mirrors RngEnclave's
         // handler tree.
-        enclave = NativeHostApi.createEnclave(EnclaveletHostHandler(attestationConfiguration), enclaveFile, isDebug = true)
-    }
-
-    @After
-    fun shutdown() {
-        Native.destroyEnclave(enclave.enclaveId)
+        val handler = EnclaveletHostHandler(attestationConfiguration, exposeErrorsToEnclave = true)
+        enclave = hostApi.createEnclave(handler, enclaveFile)
     }
 
     @Test
@@ -85,7 +76,7 @@ class RngEnclaveTest {
 
         // Check that the measurement matches the enclave's that we wanted to load
         // First read the metadata from the enclave file
-        val metadata:              Cursor<ByteBuffer, SgxMetadata>    = NativeHostApi.readMetadata(enclaveFile)
+        val metadata:              Cursor<ByteBuffer, SgxMetadata>    = hostApi.readMetadata(enclaveFile)
         val cssBodyInMetadata:     Cursor<ByteBuffer, SgxCssBody>     = metadata[SgxMetadata.enclaveCss][SgxEnclaveCss.body]
         val measurementInMetadata: Cursor<ByteBuffer, SgxMeasurement> = cssBodyInMetadata[SgxCssBody.measurement]
         // Now get the measurement from the quote we created

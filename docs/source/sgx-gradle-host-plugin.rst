@@ -43,13 +43,13 @@ here for reference:
         baseImageName = 'oblivium/enclavelet-host'
 
         // Version tag for the SGXJVM host base image.
-        baseTag = '|oblivium_version|'
+        baseTag = '|OBLIVIUM_VERSION|'
 
         // Your Docker image's chosen name.
         publishImageName = '${project.group}/${project.name}'
 
         // Your Docker image's version tag.
-        publishTag = '|oblivium_version|'
+        publishTag = '|OBLIVIUM_VERSION|'
 
         // Configuration properties for your test containers.
         testing {
