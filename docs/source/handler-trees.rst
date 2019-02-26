@@ -4,7 +4,7 @@ Handler trees
 Secure communication between users, enclaves and host software requires a complex and intricate set of operations to
 be performed in order to authenticate the enclave via remote attestation, set up an encrypted communications channel,
 keep multiple parallel users separated, safely store data to disk, handle errors and so on. Handler trees are how
-JVM-in-SGX abstracts this complexity away from you.
+SGXJVM abstracts this complexity away from you.
 
 The root of the tree processes raw calls in and out of the enclave (ECALLs/OCALLs). As the message propagates down
 the tree it gets demultiplexed/processed and possibly passed to a downstream handler. This way we can compose
@@ -12,7 +12,7 @@ different pieces of functionality (like attestation) horizontally, and add inter
 encryption/decryption. When a ``Handler`` is receiving a message it furthermore has access to a ``Sender`` which can
 send messages the other way.
 
-JVM-in-SGX provides handlers to perform the following tasks, and you can write your own:
+SGXJVM provides handlers to perform the following tasks, and you can write your own:
 
 * Communicating the contents of Java exceptions.
 * Multiplexing "channels" onto the stream of messages. This allows multiple users to interact with an enclave simultaneously.
@@ -69,6 +69,6 @@ Most of the above complexity is hidden behind the ``Enclavelet`` abstract class.
 - ``createReportData``: the piece of data the enclave provides to be included in an attestation report/quote.
 - ``createHandler``: a factory for Handlers that handle incoming connections to the enclave.
 
-.. note:: Future versions of JVM-in-SGX will probably abstract you from the concept of report data entirely. A
+.. note:: Future versions of SGXJVM will probably abstract you from the concept of report data entirely. A
     cryptographic key pair will be generated automatically, this will be the identity of the running enclave instance.
     You will be able to access this identity indirectly to derive further keys, sign data, or encrypt.

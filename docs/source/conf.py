@@ -33,7 +33,7 @@ sys.path.append(os.path.abspath('../ext/'))
 extensions = ['rst2pdf.pdfbuilder', 'm2r', 'conditional_toctree']
 
 # PDF configuration
-pdf_documents = [('index', u'oblivium-guide', u'JVM-in-SGX', u'R3')]
+pdf_documents = [('index', u'oblivium-guide', u'SGXJVM', u'R3')]
 pdf_stylesheets = ['sphinx', 'kerning', 'a4', 'murphy', 'tenpoint']
 pdf_compressed = True
 pdf_fit_mode = "shrink"
@@ -53,7 +53,7 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # General information about the project.
-project = u'JVM-in-SGX'
+project = u'SGXJVM'
 copyright = u'2018-2019, R3 Limited'
 author = u'R3'
 

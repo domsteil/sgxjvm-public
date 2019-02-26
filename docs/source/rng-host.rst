@@ -5,7 +5,7 @@ RNG Host
 
 .. contents::
 
-JVM-in-SGX provides a generic host process that can load any enclavelet. Hosting of an enclave
+SGXJVM provides a generic host process that can load any enclavelet. Hosting of an enclave
 requires a working :ref:`sgx-setup`.
 
 Run the host.jar directly
