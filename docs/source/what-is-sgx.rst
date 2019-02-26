@@ -62,7 +62,7 @@ before passing it to the untrusted world (i.e. host operating system and softwar
 if a signed enclave is to be loaded in non-DEBUG mode. The key is also used during certain sealing key derivations, to
 enable enclaves signed with the same signer to derive the same keys.
 
-**Enclavelet.** An enclave implemented in a JVM bytecode language, running on Oblivium. Enclavelets have access to
+**Enclavelet.** An enclave implemented in a JVM bytecode language, running on JVM-in-SGX. Enclavelets have access to
 infrastructure that doesn't come out of the box when using raw SGX directly. They interact with the world through
 message passing.
 
@@ -73,7 +73,7 @@ then provisioned to the enclave by uploading it through the untrusted world.
 CPU core itself. Because of this, the untrusted world is not involved in random number generation and thus the output
 can be trusted by the enclave. You can read a `third party audit of the design of Intel's RNG circuitry here <_static/Intel_TRNG_Report_20120312.pdf>`_.
 
-**Host.** A server running in the untrusted world that creates the enclave and loads Oblivium and your enclavelet into it.
+**Host.** A server running in the untrusted world that creates the enclave and loads JVM-in-SGX and your enclavelet into it.
 The host also connects the enclave to hardware resources like network and disk.
 
 A conceptual example
