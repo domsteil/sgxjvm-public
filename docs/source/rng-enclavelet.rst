@@ -116,7 +116,7 @@ The important values here are:
 The Gradle build
 ----------------
 
-Oblivium projects are built using the popular Gradle tool. The build process for an enclave is complex and involves
+SGXJVM projects are built using the popular Gradle tool. The build process for an enclave is complex and involves
 statically linking a fat JAR file into a native binary and (in release mode) signing it. Several Gradle plugins are
 provided to simplify this.
 
@@ -128,12 +128,12 @@ Here is the basic template you should use:
    :end-before: DOCS_ENCLAVE_BUILD_END
 
 Set ``oblivium_version`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
-you want to use in your ``settings.gradle`` file. Kotlin is not required to use Oblivium, but the RNG enclave does use it.
+you want to use in your ``settings.gradle`` file. Kotlin is not required to use SGXJVM, but the RNG enclave does use it.
 
 Most of this is standard Gradle logic, so if it's not clear please refer to the Gradle user guide. We use the "shadow JAR"
 plugin to build a single JAR file containing all the class files and resources our program needs, including bundled
 dependencies, then we set the ``Enclave-Class`` manifest attribute. This points to the ``Enclavelet`` entrypoint that
-Oblivium will load and is analogous to the ``Main-Class`` attribute executable JARs normally use. We make the test
+SGXJVM will load and is analogous to the ``Main-Class`` attribute executable JARs normally use. We make the test
 tasks depend on ``buildSignedEnclaveSimulation``, therefore we will run our unit tests in simulation mode. No
 SGX hardware will be required, so this can run on normal CI clusters.
 
@@ -172,11 +172,11 @@ In this use case, the user isn't actually uploading anything to us, just downloa
 not valuable secrets until they're used for something else, like deriving an encryption key, but that is not being done
 here. So rather than set up an encrypted communication, we simply generate a signing key and place it in the report data.
 
-The ``EnclaveApi`` provides access to functionality provided by Oblivium. Inside the enclave many ordinary Java APIs
+The ``EnclaveApi`` provides access to functionality provided by SGXJVM. Inside the enclave many ordinary Java APIs
 do not work, because they would rely on functionality only accessible by the untrusted world, so you may have to go
 via this API instead.
 
-.. note:: The Oblivium team always endeavours to provide SGX compatible implementations of the standard Java API whenever
+.. note:: The SGXJVM team always endeavours to provide SGX compatible implementations of the standard Java API whenever
    technically possible.
 
 Here, we use it to generate an ed25519 signing key. Ed25519 is a modern elliptic curve signature algorithm with many
