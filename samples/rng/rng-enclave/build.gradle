@@ -60,10 +60,19 @@ docker {
 }
 
 enclaveImageSimulation {
+    publishImageName = "$name-dev"
     testing {
         grpcPort = grpcTestPort
         startTimeout = 60
     }
+}
+
+enclaveImageRelease {
+    publishImageName = "$name-dev"
+}
+
+enclaveImageDebug {
+    publishImageName = "$name-dev"
 }
 
 def publishBaseContainer = gradle.includedBuilds.findResult {
