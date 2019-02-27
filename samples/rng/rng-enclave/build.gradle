@@ -73,11 +73,11 @@ enclaveImageSimulation {
 }
 
 enclaveImageRelease {
-    publishImageName = "$name-dev"
+    publishImageName = "$group/$name-dev"
 }
 
 enclaveImageDebug {
-    publishImageName = "$name-dev"
+    publishImageName = "$group/$name-dev"
 }
 
 def buildBaseImage = gradle.includedBuilds.findResult {
