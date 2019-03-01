@@ -1,0 +1,2 @@
+Fully qualified name,ProdID,ISVSVN,Version,Measurement,Signature permalink
+com.r3.sgx.rng,1,0,1.0-rc5,4d357585ce10d8b44741519def51d1c873faee168c79af6e16d1e75fce7fa93e,https://raw.githubusercontent.com/corda/oblivium-public/38593af588a34bdd56b9468945ae30a0ee3f5c28/samples/rng/rng-enclave/src/sgx/Release/mrsigner.signature.bin
