@@ -6,7 +6,7 @@ RNG Enclavelet
 Overview
 --------
 
-`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public/samples/rng>`_. This
+`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public>`_, under ``samples/rng``. This
 project shows you how to generate and sign random numbers. Users who remotely attest with the enclave can be sure that
 the stream of random numbers came from a genuine Intel CPU that generated the numbers using the on-board random number
 generation circuitry.
