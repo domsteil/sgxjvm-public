@@ -4,7 +4,7 @@ SGX Host Plugin
 ===============
 
 The SGX Host plugin creates Gradle tasks to copy your own signed Enclavelet
-(as built by the SGX Enclave plugin) into the ``oblivium/enclavelet-host`` base
+(as built by the SGX Enclave plugin) into the ``com.r3.sgx/enclavelet-host`` base
 Docker image and then bake them together into a new Docker image. This new
 image can also be launched inside a Docker container so that you can run tests
 against it.
@@ -40,7 +40,7 @@ here for reference:
         enclaveObject = file('path/to/signed-enclave.so')
 
         // Docker base image containing the framework's host code.
-        baseImageName = 'oblivium/enclavelet-host'
+        baseImageName = 'com.r3.sgx/enclavelet-host'
 
         // Version tag for the framework's host base image.
         baseTag = '|OBLIVIUM_VERSION|'

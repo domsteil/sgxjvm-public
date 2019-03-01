@@ -9,11 +9,7 @@ Either include this ``buildscript`` in your root ``build.gradle`` file:
 .. parsed-literal::
 
     buildscript {
-        repositories {
-            maven {
-                url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-            }
-        }
+        apply from: 'credentials.gradle', to: it
         dependencies {
             classpath "com.r3.sgx:sgx-jvm-plugin-enclave:|oblivium_version|"
             classpath "com.r3.sgx:sgx-jvm-plugin-host:|oblivium_version|"
@@ -40,11 +36,9 @@ file:
 .. parsed-literal::
 
     pluginManagement {
+        apply from: 'credentials.gradle', to: it
         repositories {
             gradlePluginPortal()
-            maven {
-                url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-            }
         }
     }
 

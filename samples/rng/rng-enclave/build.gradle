@@ -4,29 +4,21 @@ plugins {
     id 'com.r3.sgx.host'
 }
 
-repositories {
-    jcenter()
-    mavenLocal()
-    maven {
-        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-    }
-}
-
 ext {
     grpcTestPort = 44444
 }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "com.r3.sgx:api-core-enclave:$oblivium_version"
+    implementation "com.r3.sgx:api-core-enclave:$sgxjvm_version"
 
     testImplementation project(':samples:rng:rng-client-common')
     testImplementation "org.jetbrains.kotlin:kotlin-test"
-    testImplementation "com.r3.sgx:api-core-host:$oblivium_version"
-    testImplementation "com.r3.sgx:enclavelet-host-client:$oblivium_version"
-    testImplementation "com.r3.sgx:enclave-testing:$oblivium_version"
+    testImplementation "com.r3.sgx:api-core-host:$sgxjvm_version"
+    testImplementation "com.r3.sgx:enclavelet-host-client:$sgxjvm_version"
+    testImplementation "com.r3.sgx:enclave-testing:$sgxjvm_version"
     testImplementation "org.slf4j:slf4j-api:$slf4j_version"
-    testRuntimeOnly "com.r3.sgx:native-host-simulation:$oblivium_version"
+    testRuntimeOnly "com.r3.sgx:native-host-simulation:$sgxjvm_version"
     testRuntimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
 }
 
@@ -72,7 +64,7 @@ enclaveImageSimulation {
 }
 
 def buildBaseImage = gradle.includedBuilds.findResult {
-    return (it.name == 'oblivium') ? it.task(':containers:enclavelet-host:buildImagePublish') : null
+    return (it.name == 'sgxjvm') ? it.task(':containers:enclavelet-host:buildImagePublish') : null
 }
 
 if (buildBaseImage) {

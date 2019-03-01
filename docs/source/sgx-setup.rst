@@ -54,7 +54,7 @@ In order to run a fully fledged enclave host we need a working SGX setup. For th
 
     .. parsed-literal::
 
-        docker run --rm -it -v /run/aesmd:/run/aesmd --device /dev/isgx |OBLIVIUM_CONTAINER_REGISTRY_URL|/oblivium/aesmd:latest
+        docker run --rm -it -v /run/aesmd:/run/aesmd --device /dev/isgx |OBLIVIUM_CONTAINER_REGISTRY_URL|/com.r3.sgx/aesmd:latest
 
     The above starts aesmd in a container with access to the SGX device,
     and exposes the UNIX domain socket our host will use to communicate
