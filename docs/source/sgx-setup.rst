@@ -6,7 +6,7 @@ SGX Setup
 In order to run a fully fledged enclave host we need a working SGX setup. For this:
 
 #. You need to run a Linux-based distribution.
-    SGXJVM currently only supports ELF-based enclaves.
+    Currently, only ELF-based enclaves are supported.
 
 #. You need an SGX-capable CPU.
     See `<https://github.com/ayeks/SGX-hardware>`_ for a non-comprehensive list
