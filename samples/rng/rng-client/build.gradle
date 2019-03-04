@@ -3,19 +3,11 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url = "https://ci-artifactory.corda.r3cev.com/artifactory/oblivium"
-    }
-}
-
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     implementation "info.picocli:picocli:$picocli_version"
     implementation project(':samples:rng:rng-client-common')
-    implementation "com.r3.sgx:api-core-common:$oblivium_version"
+    implementation "com.r3.sgx:api-core-common:$sgxjvm_version"
 }
 
 shadowJar {

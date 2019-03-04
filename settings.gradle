@@ -1,11 +1,11 @@
-rootProject.name = "oblivium-public"
+rootProject.name = "sgxjvm-public"
 
 include ':samples:rng:rng-client-common'
 include ':samples:rng:rng-client'
 include ':samples:rng:rng-enclave'
 
-// Optional compositing of oblivium
-if (file("$rootDir/oblivium").isDirectory()) {
-    includeBuild("$rootDir/oblivium/sgx-jvm-plugin")
-    includeBuild("$rootDir/oblivium")
+// Optional compositing of sgxjvm
+if (file("$rootDir/sgxjvm").isDirectory()) {
+    includeBuild("$rootDir/sgxjvm/sgx-jvm-plugin")
+    includeBuild("$rootDir/sgxjvm")
 }

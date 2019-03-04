@@ -22,4 +22,4 @@ make SPHINXOPTS=-W html -C ${SCRIPT_DIR}
 #echo "Generating PDF document ..."
 #make latexpdf
 #echo "Moving PDF file from $(eval echo $SCRIPT_DIR/build/latex/corda-developer-site.pdf) to $(eval echo $SCRIPT_DIR/build/html/_static/corda-developer-site.pdf)"
-#mv $SCRIPT_DIR/build/latex/oblivium-guide.pdf $PWD/build/html/_static/oblivium-guide.pdf
+#mv $SCRIPT_DIR/build/latex/sgxjvm-guide.pdf $PWD/build/html/_static/sgxjvm-guide.pdf

@@ -6,7 +6,7 @@ RNG Enclavelet
 Overview
 --------
 
-`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/oblivium-public>`_, under ``samples/rng``. This
+`The RNG enclavelet project can be found on GitHub here <https://github.com/corda/sgxjvm-public>`_, under ``samples/rng``. This
 project shows you how to generate and sign random numbers. Users who remotely attest with the enclave can be sure that
 the stream of random numbers came from a genuine Intel CPU that generated the numbers using the on-board random number
 generation circuitry.
@@ -59,7 +59,7 @@ SGX to implement CryptoLocker style viruses or avoid reverse engineering.
 How to build the enclave
 ------------------------
 
-From the top level of the `oblivium-public repository <https://github.com/corda/oblivium-public/>`_, build a properly
+From the top level of the `sgxjvm-public repository <https://github.com/corda/sgxjvm-public/>`_, build a properly
 linked enclave using:
 
 .. sourcecode:: bash
@@ -127,7 +127,7 @@ Here is the basic template you should use:
    :start-after: DOCS_ENCLAVE_BUILD_BEGIN
    :end-before: DOCS_ENCLAVE_BUILD_END
 
-Set ``oblivium_version`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
+Set ``sgxjvm_version`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
 you want to use in your ``settings.gradle`` file. Kotlin is not required to use this framework, but the RNG enclave
 does use it.
 

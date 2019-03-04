@@ -11,7 +11,7 @@ requires a working :ref:`sgx-setup`.
 Run the host.jar directly
 -------------------------
 
-From the top level of the `oblivium-public repository <https://github.com/corda/oblivium-public/>`_, download the
+From the top level of the `sgxjvm-public repository <https://github.com/corda/sgxjvm-public/>`_, download the
 latest enclavelet host artifact:
 
 .. parsed-literal::
@@ -45,7 +45,7 @@ For more command line options run:
 There's also a configuration file you can provide that allows setting finer-grained options, as well as switch to a
 different SPID:
 
-.. literalinclude:: ../../oblivium/enclavelet-host/enclavelet-host-server/src/main/resources/default-host-settings.yml
+.. literalinclude:: ../../sgxjvm/enclavelet-host/enclavelet-host-server/src/main/resources/default-host-settings.yml
     :language: yaml
 
 Create/run a docker image
@@ -86,7 +86,7 @@ Interact with the host
 
 To interact with the host you can connect to it through gRPC. The interface:
 
-.. literalinclude:: ../../oblivium/enclavelet-host/enclavelet-host-common/src/main/proto/enclavelet-host.proto
+.. literalinclude:: ../../sgxjvm/enclavelet-host/enclavelet-host-common/src/main/proto/enclavelet-host.proto
     :language: proto
 
 There is also a sample :ref:`rng-client` showcasing how to interact with the host.
