@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The purpose of this file is to make the docsite in a python virtualenv
 # You can call it manually if running make manually, otherwise gradle will run it for you
+set -xe
 
 SCRIPT_DIR=$(dirname $(readlink -f ${BASH_SOURCE[0]}))
 export absolutevirtualenv="$SCRIPT_DIR/build/virtualenv"
@@ -16,7 +17,10 @@ else
 fi
 
 echo "Generating HTML pages ..."
-make SPHINXOPTS=-W html -C ${SCRIPT_DIR}
+for VERSION_DIR in ${SCRIPT_DIR}/versions/*
+do
+    make SPHINXOPTS="-W -c ${VERSION_DIR}" html -C ${VERSION_DIR}
+done
 
 # TODO investigate making this work
 #echo "Generating PDF document ..."
