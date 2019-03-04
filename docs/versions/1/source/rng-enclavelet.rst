@@ -94,7 +94,7 @@ At this time you are required to create a file called ``enclave.xml`` for each e
 ``src/sgx/Simulation``, ``src/sgx/Debug`` and ``src/sgx/Release`` in your project. This file contains various values
 that configure the SGX SDK enclave build process, and looks like this:
 
-.. literalinclude:: ../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
+.. literalinclude:: ../../../../samples/rng/rng-enclave/src/sgx/Release/enclave.xml
     :language: xml
 
 The important values here are:
@@ -122,14 +122,13 @@ provided to simplify this.
 
 Here is the basic template you should use:
 
-.. literalinclude:: ../../samples/rng/rng-enclave/build.gradle
+.. literalinclude:: ../../../../samples/rng/rng-enclave/build.gradle
    :language: groovy
    :start-after: DOCS_ENCLAVE_BUILD_BEGIN
    :end-before: DOCS_ENCLAVE_BUILD_END
 
 Set ``sgxjvm_version`` to |oblivium_version| and ``kotlin_version`` to |kotlin_version| or whatever version of Kotlin
-you want to use in your ``settings.gradle`` file. Kotlin is not required to use this framework, but the RNG enclave
-does use it.
+you want to use in your ``settings.gradle`` file. Kotlin is not required to use this framework, but the RNG enclave does use it.
 
 Most of this is standard Gradle logic, so if it's not clear please refer to the Gradle user guide. We use the "shadow JAR"
 plugin to build a single JAR file containing all the class files and resources our program needs, including bundled
@@ -154,7 +153,7 @@ The Enclavelet class
 
 The RNG enclave is written in Kotlin, but the Java equivalent would be straightforward. It is defined like this:
 
-.. literalinclude:: ../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngEnclave.kt
+.. literalinclude:: ../../../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngEnclave.kt
    :language: kotlin
    :start-after: DOCS_RNG_ENCLAVE_BEGIN
    :end-before: DOCS_RNG_ENCLAVE_END
@@ -177,7 +176,7 @@ The ``EnclaveApi`` provides access to the framework's functionality. Inside the 
 do not work, because they would rely on functionality only accessible by the untrusted world, so you may have to go
 via this API instead.
 
-.. note:: We always endeavours to provide SGX compatible implementations of the standard Java API whenever
+.. note:: We always endeavour to provide SGX compatible implementations of the standard Java API whenever
    technically possible.
 
 Here, we use it to generate an ed25519 signing key. Ed25519 is a modern elliptic curve signature algorithm with many
@@ -196,7 +195,7 @@ clients at once.
 
 The ``RngHandler`` class looks like this:
 
-.. literalinclude:: ../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngHandler.kt
+.. literalinclude:: ../../../../samples/rng/rng-enclave/src/main/kotlin/com/r3/sgx/rng/enclave/RngHandler.kt
    :language: kotlin
    :start-after: DOCS_RNG_HANDLER_BEGIN
    :end-before: DOCS_RNG_HANDLER_END
