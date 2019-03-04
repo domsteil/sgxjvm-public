@@ -30,9 +30,10 @@ placeholder for either ``Simulation``, ``Debug`` or ``Release``.
 
     enclave<Type> {
         configuration = file("path/to/enclave.xml")
-        shouldUseDummyKey = (TRUE | false)
+        shouldUseDummyKey = (true | false)
         mrsignerPublicKey = file("path/to/mrsigner.public.pem")
         mrsignerSignature = file("path/to/mrsigner.signature.bin")
+        signatureDate = (new SimpleDateFormat("yyyymmdd")).parse("19700101")
     }
 
 ..
