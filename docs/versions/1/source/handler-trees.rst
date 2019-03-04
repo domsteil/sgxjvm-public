@@ -4,7 +4,7 @@ Handler trees
 Secure communication between users, enclaves and host software requires a complex and intricate set of operations to
 be performed in order to authenticate the enclave via remote attestation, set up an encrypted communications channel,
 keep multiple parallel users separated, safely store data to disk, handle errors and so on. Handler trees are how
-abstracts this complexity away from you.
+we abstract this complexity away from you.
 
 The root of the tree processes raw calls in and out of the enclave (ECALLs/OCALLs). As the message propagates down
 the tree it gets demultiplexed/processed and possibly passed to a downstream handler. This way we can compose

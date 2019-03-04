@@ -133,7 +133,7 @@ you want to use in your ``settings.gradle`` file. Kotlin is not required to use 
 Most of this is standard Gradle logic, so if it's not clear please refer to the Gradle user guide. We use the "shadow JAR"
 plugin to build a single JAR file containing all the class files and resources our program needs, including bundled
 dependencies, then we set the ``Enclave-Class`` manifest attribute. This points to the ``Enclavelet`` entrypoint that
-the framwork will load and is analogous to the ``Main-Class`` attribute executable JARs normally use. We make the test
+the framework will load and is analogous to the ``Main-Class`` attribute executable JARs normally use. We make the test
 tasks depend on ``buildSignedEnclaveSimulation``, therefore we will run our unit tests in simulation mode. No
 SGX hardware will be required, so this can run on normal CI clusters.
 
