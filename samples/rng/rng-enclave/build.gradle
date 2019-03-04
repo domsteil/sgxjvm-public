@@ -43,8 +43,10 @@ test {
     finalizedBy stopEnclaveContainerSimulation
 }
 
+import java.text.SimpleDateFormat
 enclaveRelease {
     shouldUseDummyKey = false
+    signatureDate = (new SimpleDateFormat("yyyymmdd")).parse("20190227")
 }
 // DOCS_ENCLAVE_BUILD_END
 
