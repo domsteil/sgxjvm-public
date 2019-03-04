@@ -39,10 +39,10 @@ here for reference:
         // SGX Enclave plugin.
         enclaveObject = file('path/to/signed-enclave.so')
 
-        // Docker base image containing the SGXJVM host code.
+        // Docker base image containing the framework's host code.
         baseImageName = 'oblivium/enclavelet-host'
 
-        // Version tag for the SGXJVM host base image.
+        // Version tag for the framework's host base image.
         baseTag = '|OBLIVIUM_VERSION|'
 
         // Your Docker image's chosen name.

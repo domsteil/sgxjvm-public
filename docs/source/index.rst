@@ -1,13 +1,14 @@
-SGXJVM
-######
+Java Applications in Intel® SGX
+###############################
 
 .. raw:: html
 
    <iframe width="700" height="393" src="https://www.youtube.com/embed/CClZqVp0kTA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br><br>
 
-SGXJVM is an advanced platform for the development of *oblivious software*, or software whose processing cannot be observed due to the
-use of cryptography. SGXJVM lets you write *enclavelets*, small pieces of software which run inside Intel SGX protected memory spaces
-and which can be audited over the internet using *remote attestation*.
+R3 has developed software that allows developers to run Java applications in Intel® SGX. This allows for the
+development of software whose processing cannot be observed through the use of cryptography. Developers can now write
+*enclavelets*, small pieces of software that run inside Intel® SGX protected memory spaces and that can be audited
+over the internet using *remote attestation*.
 
 Features
 --------
@@ -42,7 +43,8 @@ Future versions of the platform will offer:
 In the coming years the framework will evolve to support use of pure cryptographic techniques like zero knowledge proofs
 and multi-party computation, when the nature of your enclavelet and your performance requirements allow for it.
 
-.. important:: SGXJVM does not currently provide a stable API. The enclavelet API may change between releases without notice.
+.. important:: This software does not currently provide a stable API. The enclavelet API may change between releases
+   without notice.
 
 This website will teach you how SGX works and how to write enclavelets.
 

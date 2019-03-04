@@ -53,7 +53,7 @@ source_encoding = 'utf-8-sig'
 master_doc = 'index'
 
 # General information about the project.
-project = u'SGXJVM'
+project = u'Java Applications in Intel® SGX'
 copyright = u'2018-2019, R3 Limited'
 author = u'R3'
 
