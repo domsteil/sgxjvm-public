@@ -50,8 +50,6 @@ name implies) debugging, but it also serves a second purpose. To close the back 
 enclave must be signed by an Intel whitelisted key. Intel will revoke keys that are being used to create malware using
 SGX to implement CryptoLocker style viruses or avoid reverse engineering.
 
-.. warning:: Release mode has not been tested as of version 1.0-RC04.
-
 .. important:: Future versions of SGX support "flexible launch policy" which allows the owner of a machine to whitelist
    their own enclaves. Intel's own signing infrastructure will become used primarily for enclaves running on,
    e.g. consumer Windows machines.
@@ -65,7 +63,7 @@ linked enclave using:
 .. sourcecode:: bash
 
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveDebug # Build enclave with debug symbols.
-    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build an optimized enclave with stripped symbols.
+    ./gradlew samples:rng:rng-enclave:buildSignedEnclaveRelease # Build a signed release enclave with stripped symbols.
     ./gradlew samples:rng:rng-enclave:buildSignedEnclaveSimulation # Build a simulation enclave.
 
 The resulting enclave can be found in:
@@ -74,7 +72,14 @@ The resulting enclave can be found in:
 * Release: ``samples/rng/rng-enclave/build/enclave/Release/enclave.signed.so``
 * Simulation: ``samples/rng/rng-enclave/build/enclave/Simulation/enclave.signed.so``
 
-The above enclaves can be loaded onto an SGX device. Loading these requires further setup. See :ref:`sgx-setup`.
+.. note:: The Release enclave requires a production signature over the enclave, and the key of this signature must be
+    whitelisted by Intel. Therefore it is imperative that the above Release enclave is binary reproducible. In order to
+    ensure this we pin all dependencies in release branches, and this is also where we provide production signatures by
+    an Intel-whitelisted R3 key. However this signature will most probably *not* apply on a master build. If you'd like
+    to reproduce the Release enclave please build using the release branch, the latest one being |latest_release_branch|.
+
+The Debug and Release enclaves can be loaded onto an SGX device. Loading these requires further setup. See
+:ref:`sgx-setup`.
 
 To test the build enclave:
 
