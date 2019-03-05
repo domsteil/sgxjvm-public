@@ -277,7 +277,8 @@ replace = {
     'OBLIVIUM_MAVEN_URL': 'https://software.r3.com/artifactory',
     'OBLIVIUM_MAVEN_REPOSITORY': 'sgxjvm',
     'OBLIVIUM_CONTAINER_REGISTRY_URL': 'sgxjvm-docker.software.r3.com',
-    'kotlin_version': '1.2.71'
+    'kotlin_version': '1.2.71',
+    'latest_release_branch': 'release-1'
 }
 
 def append_replace(map, source):
