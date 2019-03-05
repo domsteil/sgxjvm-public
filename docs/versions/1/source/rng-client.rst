@@ -39,9 +39,9 @@ To retrieve the attestation data:
 
 .. parsed-literal::
 
-    java -jar |rng-client-jar| get-attestation localhost:8080 > attestation
+    java -jar |rng-client-jar| get-attestation sgxjvm.r3.com:8001 > attestation
 
-The above will connect to a host running on ``localhost:8080``, retrieve and pipe the attestation data into a file
+The above will connect to a host running on ``sgxjvm.r3.com:8001``, retrieve and pipe the attestation data into a file
 ``attestation``.
 
 Viewing attestations
@@ -99,14 +99,14 @@ Finally, to retrieve a securely-generated 1Kb random byte array:
 
 .. parsed-literal::
 
-    java -jar |rng-client-jar| get-random localhost:8080 -e |rng-enclave-debug-metadata|
+    java -jar |rng-client-jar| get-random sgxjvm.r3.com:8001 -e |rng-enclave-debug-metadata|
 
 As before, the above will *fail* if the enclave is loaded in DEBUG mode. To temporarily accept DEBUG quotes for testing
 use:
 
 .. parsed-literal::
 
-    java -jar |rng-client-jar| get-random localhost:8080 -e |rng-enclave-debug-metadata| --accept-debug
+    java -jar |rng-client-jar| get-random sgxjvm.r3.com:8001 -e |rng-enclave-debug-metadata| --accept-debug
 
 ``get-random`` accepts similar flags to ``verify-attestation``, as it does full verification of the quote. In addition
 it checks that the signature over the returned bytes is done by the key in the quote. If successful, it will print some
