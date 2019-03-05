@@ -273,15 +273,18 @@ def get_properties(filename):
 def get_env(prefix):
     return dict([ (key, os.environ[key]) for key in os.environ if key.startswith(prefix) ])
 
-nightly_replace = get_properties('../../../gradle.properties')
-nightly_replace.update(get_env('OBLIVIUM_'))
+replace = {
+    'latest_release_branch': 'release-1'
+}
+replace.update(get_properties('../../../gradle.properties'))
+replace.update(get_env('OBLIVIUM_'))
 
 def append_replace(map, source):
     for key in map:
         source += ".. |{key}| replace:: {value}\n".format(key = key, value = map[key])
     return source
 
-rst_epilog = append_replace(nightly_replace, "")
+rst_epilog = append_replace(replace, "")
 
 
 # The version info for the project you're documenting, acts as replacement for
@@ -289,8 +292,8 @@ rst_epilog = append_replace(nightly_replace, "")
 # built documents.
 #
 # The short X.Y version.
-version = nightly_replace['OBLIVIUM_VERSION']
+version = replace['OBLIVIUM_VERSION']
 # The full version, including alpha/beta/rc tags.
-release = nightly_replace['OBLIVIUM_VERSION']
+release = replace['OBLIVIUM_VERSION']
 # The version for use in the dropdown html.
-html_context = {'version': nightly_replace['OBLIVIUM_VERSION']}
+html_context = {'version': replace['OBLIVIUM_VERSION']}
