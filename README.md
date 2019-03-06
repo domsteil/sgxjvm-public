@@ -2,7 +2,7 @@ This is a project enabling the development of Java SGX enclaves. See
 the [documentation](https://docs.corda.net/sgxjvm/) for
 details.
 
-###  Quickstart:
+###  Quick start:
 
 We'll connect to an sample random number generating enclave hosted by R3.
 
@@ -41,7 +41,7 @@ java -jar samples/rng/rng-client/build/libs/rng-client.jar verify-attestation -e
 attestation, and in addition the enclave's signature over the randomness:
 
 ```
-java -jar samples/rng/rng-client/build/libs/rng-client.jar get-random sgxjvm.r3.com:8001 -e samples/rng/rng-enclave/build/enclave/Release/enclave.metadata.yml < attestation
+java -jar samples/rng/rng-client/build/libs/rng-client.jar get-random sgxjvm.r3.com:8001 -e samples/rng/rng-enclave/build/enclave/Release/enclave.metadata.yml
 ```
 
 If everything's correct this will print some randomness.
