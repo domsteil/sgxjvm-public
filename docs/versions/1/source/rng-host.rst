@@ -12,11 +12,12 @@ Run the host.jar directly
 -------------------------
 
 From the top level of the `sgxjvm-public repository <https://github.com/corda/sgxjvm-public/>`_, download the
-latest enclavelet host artifact:
+latest enclavelet host artifact. Note that for this to work you will have access to the Developer Preview Credentials.
+`Click here to sign up <https://www.corda.net/develop/sgxjvm.html>`_.
 
 .. parsed-literal::
 
-    wget '|OBLIVIUM_MAVEN_URL|/|OBLIVIUM_MAVEN_REPOSITORY|/com/r3/sgx/enclavelet-host-server/|OBLIVIUM_VERSION|/enclavelet-host-server-|OBLIVIUM_VERSION|-all.jar' -O host.jar
+    curl -u"<Dev Preview Username>:<Dev Preview Password>" '|OBLIVIUM_MAVEN_URL|/|OBLIVIUM_MAVEN_REPOSITORY|/com/r3/sgx/enclavelet-host-server/|OBLIVIUM_VERSION|/enclavelet-host-server-|OBLIVIUM_VERSION|-all.jar' -o host.jar
 
 To run the enclave in debug mode, run:
 
