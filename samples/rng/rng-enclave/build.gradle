@@ -58,6 +58,17 @@ docker {
     }
 }
 
+tasks.withType(com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+    if (it.name.startsWith("buildEnclaveImage")) {
+        def repositoryUrl = tasks.getByName("prepareEnclaveImageSimulation").repositoryUrl
+        def credentials = new com.bmuschko.gradle.docker.DockerRegistryCredentials(project)
+        credentials.url.set(repositoryUrl)
+        credentials.username.set(project.ext.dockerUsername)
+        credentials.password.set(project.ext.dockerPassword)
+        it.registryCredentials = credentials
+    }
+}
+
 enclaveImageSimulation {
     testing {
         grpcPort = grpcTestPort

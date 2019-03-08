@@ -1,5 +1,6 @@
 buildscript {
     apply from: 'credentials.gradle', to: it
+
     dependencies {
         classpath "com.r3.sgx:sgx-jvm-plugin-enclave:$sgxjvm_version"
         classpath "com.r3.sgx:sgx-jvm-plugin-host:$sgxjvm_version"
@@ -10,8 +11,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.2.71' apply false
 }
 
-allprojects {
-    apply from: "$rootDir/credentials.gradle", to: it
+allprojects { subProject ->
+    apply from: "$rootDir/credentials.gradle", to: subProject
     group 'com.r3.sgx'
 
     repositories {

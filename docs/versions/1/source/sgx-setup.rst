@@ -52,6 +52,14 @@ In order to run a fully fledged enclave host we need a working SGX setup. For th
     the PCE/PvE/QE trio, which are used during EPID provisioning and
     attestation.
 
+    You can run it manually, or use our pre-built docker image. For the latter
+    you'll first need to login:
+
+    .. parsed-literal::
+        docker login --username "<Dev Preview Username>" --password "<Dev Preview Password>" |OBLIVIUM_CONTAINER_REGISTRY_URL|
+
+    Then to run the container:
+
     .. parsed-literal::
 
         docker run --rm -it -v /run/aesmd:/run/aesmd --device /dev/isgx |OBLIVIUM_CONTAINER_REGISTRY_URL|/com.r3.sgx/aesmd:latest
