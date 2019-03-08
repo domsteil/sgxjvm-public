@@ -57,8 +57,7 @@ SGX to implement CryptoLocker style viruses or avoid reverse engineering.
 How to build the enclave
 ------------------------
 
-From the top level of the `sgxjvm-public repository <https://github.com/corda/sgxjvm-public/>`_, build a properly
-linked enclave using:
+From the top level of the `sgxjvm-public repository <https://github.com/corda/sgxjvm-public/>`_, build an enclave using:
 
 .. sourcecode:: bash
 
