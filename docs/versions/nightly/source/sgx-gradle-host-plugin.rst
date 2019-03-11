@@ -85,6 +85,19 @@ own Docker repository:
 
 ..
 
+Finally, you need to provide the ``sgx-host`` plugin with access credentials
+for R3's base Docker registry. You set your own ``dockerUsername`` and
+``dockerPassword`` property values in ``credentials.gradle``.
+
+.. parsed-literal::
+
+    baseRegistry {
+        username = dockerUsername
+        password = dockerPassword
+    }
+
+..
+
 Tasks
 -----
 
